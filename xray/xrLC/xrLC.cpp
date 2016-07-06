@@ -109,32 +109,32 @@ typedef int __cdecl xrOptions(b_params* params, u32 version, bool bRunBuild);
 
 void Startup(LPSTR     lpCmdLine)
 {
-	char cmd[512],name[256];
-	BOOL bModifyOptions		= FALSE;
+	char cmd[512], name[256];
+	BOOL bModifyOptions = FALSE;
 
-	strcpy(cmd,lpCmdLine);
+	strcpy(cmd, lpCmdLine);
 	strlwr(cmd);
-	if (strstr(cmd,"-?") || strstr(cmd,"-h"))			{ Help(); return; }
-	if (strstr(cmd,"-f")==0)							{ Help(); return; }
-	if (strstr(cmd,"-o"))								bModifyOptions	= TRUE;
-	if (strstr(cmd,"-gi"))								b_radiosity		= TRUE;
-	if (strstr(cmd,"-noise"))							b_noise			= TRUE;
-	if (strstr(cmd,"-nosun"))							b_nosun			= TRUE;
+	if (strstr(cmd, "-?") || strstr(cmd, "-h")) { Help(); return; }
+	if (strstr(cmd, "-f") == 0) { Help(); return; }
+	if (strstr(cmd, "-o"))								bModifyOptions = TRUE;
+	if (strstr(cmd, "-gi"))								b_radiosity = TRUE;
+	if (strstr(cmd, "-noise"))							b_noise = TRUE;
+	if (strstr(cmd, "-nosun"))							b_nosun = TRUE;
 
-// KD: new options
-	if (strstr(cmd,"-norgb"))							b_norgb			= TRUE;
-	if (strstr(cmd,"-nolmaps"))							b_nolmaps		= TRUE;
-	if (strstr(cmd,"-skipinvalid"))						b_skipinvalid	= TRUE;
+	// KD: new options
+	if (strstr(cmd, "-norgb"))							b_norgb = TRUE;
+	if (strstr(cmd, "-nolmaps"))							b_nolmaps = TRUE;
+	if (strstr(cmd, "-skipinvalid"))						b_skipinvalid = TRUE;
 	get_console_float(lpCmdLine, "-lmap_quality ", &f_lmap_quality);
-	
+
 	// Give a LOG-thread a chance to startup
 	//_set_sbh_threshold(1920);
-	InitCommonControls		();
-	thread_spawn			(logThread, "log-update",	1024*1024,0);
-	Sleep					(150);
-	
+	InitCommonControls();
+	thread_spawn(logThread, "log-update", 1024 * 1024, 0);
+	Sleep(150);
+
 	// Faster FPU 
-	SetPriorityClass		(GetCurrentProcess(),NORMAL_PRIORITY_CLASS);
+	SetPriorityClass(GetCurrentProcess(), NORMAL_PRIORITY_CLASS);
 
 	/*
 	u32	dwMin			= 1800*(1024*1024);
@@ -144,76 +144,76 @@ void Startup(LPSTR     lpCmdLine)
 		clMsg("*** Failed to expand working set");
 	};
 	*/
-	
+
 	// Load project
-	name[0]=0;				sscanf(strstr(cmd,"-f")+2,"%s",name);
+	name[0] = 0;				sscanf(strstr(cmd, "-f") + 2, "%s", name);
 	string_path				prjName;
-	FS.update_path			(prjName,"$game_levels$",strconcat(sizeof(prjName),prjName,name,"\\build.prj"));
+	FS.update_path(prjName, "$game_levels$", strconcat(sizeof(prjName), prjName, name, "\\build.prj"));
 	string256				phaseName;
-	Phase					(strconcat(sizeof(phaseName),phaseName,"Reading project [",name,"]..."));
+	Phase(strconcat(sizeof(phaseName), phaseName, "Reading project [", name, "]..."));
 
 	string256 inf;
 	extern  HWND logWindow;
-	IReader*	F			= FS.r_open(prjName);
-	if (NULL==F){
-		sprintf				(inf,"Build failed!\nCan't find level: '%s'",name);
-		clMsg				(inf);
-		MessageBox			(logWindow,inf,"Error!",MB_OK|MB_ICONERROR);
+	IReader*	F = FS.r_open(prjName);
+	if (NULL == F) {
+		sprintf(inf, "Build failed!\nCan't find level: '%s'", name);
+		clMsg(inf);
+		MessageBox(logWindow, inf, "Error!", MB_OK | MB_ICONERROR);
 		return;
 	}
 
 	// Version
 	u32 version;
-	F->r_chunk			(EB_Version,&version);
-	clMsg				("version: %d",version);
-	R_ASSERT(XRCL_CURRENT_VERSION==version);
+	F->r_chunk(EB_Version, &version);
+	clMsg("version: %d", version);
+	R_ASSERT(XRCL_CURRENT_VERSION == version);
 
 	// Header
 	b_params				Params;
-	F->r_chunk			(EB_Parameters,&Params);
+	F->r_chunk(EB_Parameters, &Params);
 
 	//KD start
-	Params.m_lm_pixels_per_meter	= f_lmap_quality;
+	Params.m_lm_pixels_per_meter = f_lmap_quality;
 	//KD end
 
 	// Show options if needed
-	if (bModifyOptions)		
+	if (bModifyOptions)
 	{
-		Phase		("Project options...");
-		HMODULE		L = LoadLibrary		("xrLC_Options.dll");
-		void*		P = GetProcAddress	(L,"_frmScenePropertiesRun");
-		R_ASSERT	(P);
+		Phase("Project options...");
+		HMODULE		L = LoadLibrary("xrLC_Options.dll");
+		void*		P = GetProcAddress(L, "_frmScenePropertiesRun");
+		R_ASSERT(P);
 		xrOptions*	O = (xrOptions*)P;
-		int			R = O(&Params,version,false);
-		FreeLibrary	(L);
-		if (R==2)	{
+		int			R = O(&Params, version, false);
+		FreeLibrary(L);
+		if (R == 2) {
 			ExitProcess(0);
 		}
 	}
-	
+
 	// Conversion
-	Phase					("Converting data structures...");
-	pBuild					= xr_new<CBuild>();
-	pBuild->Load			(Params,*F);
-	FS.r_close				(F);
-	
+	Phase("Converting data structures...");
+	pBuild = xr_new<CBuild>();
+	pBuild->Load(Params, *F);
+	FS.r_close(F);
+
 	// Call for builder
 	string_path				lfn;
 	CTimer	dwStartupTime;	dwStartupTime.Start();
-	FS.update_path			(lfn,_game_levels_,name);
-	pBuild->Run				(lfn);
-	xr_delete				(pBuild);
+	FS.update_path(lfn, _game_levels_, name);
+	pBuild->Run(lfn);
+	xr_delete(pBuild);
 
 	// Show statistic
 	extern	std::string make_time(u32 sec);
-	u32	dwEndTime			= dwStartupTime.GetElapsed_ms();
-	sprintf					(inf,"Time elapsed: %s",make_time(dwEndTime/1000).c_str());
-	clMsg					("Build succesful!\n%s",inf);
-	MessageBox				(logWindow,inf,"Congratulation!",MB_OK|MB_ICONINFORMATION);
+	u32	dwEndTime = dwStartupTime.GetElapsed_ms();
+	sprintf(inf, "Time elapsed: %s", make_time(dwEndTime / 1000).c_str());
+	clMsg("Build succesful!\n%s", inf);
+	MessageBox(logWindow, inf, "Congratulation!", MB_OK | MB_ICONINFORMATION);
 
 	// Close log
-	bClose					= TRUE;
-	Sleep					(500);
+	bClose = TRUE;
+	Sleep(500);
 }
 
 typedef void DUMMY_STUFF (const void*,const u32&,void*);

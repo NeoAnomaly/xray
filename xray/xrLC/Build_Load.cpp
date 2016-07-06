@@ -165,62 +165,66 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS)
 
 		// Controlles/Layers
 		{
-			F = fs.open_chunk		(EB_Light_control);
-			L_control_data.assign	(LPBYTE(F->pointer()),LPBYTE(F->pointer())+F->length());
+			F = fs.open_chunk(EB_Light_control);
+			L_control_data.assign(LPBYTE(F->pointer()), LPBYTE(F->pointer()) + F->length());
 
 			R_Layer					temp;
 
 			while (!F->eof())
 			{
-				F->r				(temp.control.name,sizeof(temp.control.name));
-				u32 cnt				= F->r_u32();
-				temp.control.data.resize(cnt);
-				F->r				(&*temp.control.data.begin(),cnt*sizeof(u32));
+				F->r(temp.control.name, sizeof(temp.control.name));
 
-				L_layers.push_back	(temp);
+				u32 cnt = F->r_u32();
+				if (cnt)
+				{
+					temp.control.data.resize(cnt);
+					F->r(&*temp.control.data.begin(), cnt * sizeof(u32));
+				}				
+
+				L_layers.push_back(temp);
 			}
 
-			F->close		();
+			F->close();
 		}
 		// Static
 		{
-			F = fs.open_chunk	(EB_Light_static);
+			F = fs.open_chunk(EB_Light_static);
 			b_light_static		temp;
-			u32 cnt				= F->length()/sizeof(temp);
-			for	(i=0; i<cnt; i++)
+			u32 cnt = F->length() / sizeof(temp);
+			for (i = 0; i < cnt; i++)
 			{
 				R_Light		RL;
-				F->r		(&temp,sizeof(temp));
-				Flight	L	= temp.data;
+				F->r(&temp, sizeof(temp));
+				Flight	L = temp.data;
 
 				// type
-				if			(L.type == D3DLIGHT_DIRECTIONAL)	RL.type	= LT_DIRECT;
-				else											
+				if (L.type == D3DLIGHT_DIRECTIONAL)	RL.type = LT_DIRECT;
+				else
 					RL.type = LT_POINT;
-				RL.level	= 0;
+				RL.level = 0;
 
 				// split energy/color
-				float			_e		=	(L.diffuse.r+L.diffuse.g+L.diffuse.b)/3.f;
-				Fvector			_c		=	{L.diffuse.r,L.diffuse.g,L.diffuse.b};
-				if (_abs(_e)>EPS_S)		_c.div	(_e);
-				else					{ _c.set(0,0,0); _e=0; }
+				float			_e = (L.diffuse.r + L.diffuse.g + L.diffuse.b) / 3.f;
+				Fvector			_c = { L.diffuse.r,L.diffuse.g,L.diffuse.b };
+				if (_abs(_e) > EPS_S)		_c.div(_e);
+				else { _c.set(0, 0, 0); _e = 0; }
 
 				// generic properties
-				RL.diffuse.set				(_c);
-				RL.position.set				(L.position);
-				RL.direction.normalize_safe	(L.direction);
-				RL.range				=	L.range*1.1f;
-				RL.range2				=	RL.range*RL.range;
-				RL.attenuation0			=	L.attenuation0;
-				RL.attenuation1			=	L.attenuation1;
-				RL.attenuation2			=	L.attenuation2;
-				RL.energy				=	_e;
+				RL.diffuse.set(_c);
+				RL.position.set(L.position);
+				RL.direction.normalize_safe(L.direction);
+				RL.range = L.range*1.1f;
+				RL.range2 = RL.range*RL.range;
+				RL.attenuation0 = L.attenuation0;
+				RL.attenuation1 = L.attenuation1;
+				RL.attenuation2 = L.attenuation2;
+				RL.energy = _e;
 
 				// place into layer
-				R_ASSERT	(temp.controller_ID<L_layers.size());
-				L_layers	[temp.controller_ID].lights.push_back	(RL);
+				R_ASSERT(temp.controller_ID < L_layers.size());
+				L_layers[temp.controller_ID].lights.push_back(RL);
 			}
-			F->close		();
+			F->close();
 		}
 
 		// ***Search LAYERS***

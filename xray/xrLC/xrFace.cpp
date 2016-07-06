@@ -15,14 +15,17 @@ void	base_lighting::select	(xr_vector<R_Light>& dest, xr_vector<R_Light>& src, F
 	Fsphere		Sphere;
 	Sphere.set	(P,R);
 	dest.clear	();
-	R_Light*	L			= &*src.begin();
-	for (; L!=&*src.end(); L++)
+
+	for each (const R_Light& L in src)
 	{
-		if (L->type==LT_POINT) {
-			float dist						= Sphere.P.distance_to(L->position);
-			if (dist>(Sphere.R+L->range))	continue;
+		if (L.type == LT_POINT)
+		{
+			float dist = Sphere.P.distance_to(L.position);
+
+			if (dist > (Sphere.R + L.range))	
+				continue;
 		}
-		dest.push_back(*L);
+		dest.push_back(L);
 	}
 }
 void	base_lighting::select	(base_lighting& from, Fvector& P, float R)

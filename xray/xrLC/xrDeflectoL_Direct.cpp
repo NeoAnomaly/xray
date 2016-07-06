@@ -45,98 +45,120 @@ void CDeflector::L_Direct_Edge (CDB::COLLIDER* DB, base_lighting* LightsSelected
 	}
 }
 
-void CDeflector::L_Direct	(CDB::COLLIDER* DB, base_lighting* LightsSelected, HASH& H)
+void CDeflector::L_Direct(CDB::COLLIDER* DB, base_lighting* LightsSelected, HASH& H)
 {
-	R_ASSERT	(DB);
-	R_ASSERT	(LightsSelected);
+	R_ASSERT(DB);
+	R_ASSERT(LightsSelected);
 
 	lm_layer&	lm = layer;
 
 	// Setup variables
-	Fvector2	dim,half;
-	dim.set		(float(lm.width),float(lm.height));
-	half.set	(.5f/dim.x,.5f/dim.y);
-	
+	Fvector2	dim, half;
+	dim.set(float(lm.width), float(lm.height));
+	half.set(.5f / dim.x, .5f / dim.y);
+
 	// Jitter data
 	Fvector2	JS;
-	JS.set		(.4999f/dim.x, .4999f/dim.y);
-	
+	JS.set(.4999f / dim.x, .4999f / dim.y);
+
 	u32			Jcount;
 	Fvector2*	Jitter;
 	Jitter_Select(Jitter, Jcount);
-	
+
 	// Lighting itself
-	DB->ray_options	(0);
-	
-	for (u32 V=0; V<lm.height; V++)	{
-		for (u32 U=0; U<lm.width; U++)	{
-			u32				Fcount	= 0;
+	DB->ray_options(0);
+
+	for (u32 V = 0; V < lm.height; V++) {
+		for (u32 U = 0; U < lm.width; U++) {
+			u32				Fcount = 0;
 			base_color_c	C;
-			
+
 			try {
-				for (u32 J=0; J<Jcount; J++) 
+				for (u32 J = 0; J < Jcount; J++)
 				{
 					// LUMEL space
 					Fvector2 P;
-					P.x = float(U)/dim.x + half.x + Jitter[J].x * JS.x;
-					P.y = float(V)/dim.y + half.y + Jitter[J].y * JS.y;
-					
-					xr_vector<UVtri*>&	space	= H.query(P.x,P.y);
-					
+					P.x = float(U) / dim.x + half.x + Jitter[J].x * JS.x;
+					P.y = float(V) / dim.y + half.y + Jitter[J].y * JS.y;
+
+					xr_vector<UVtri*>&	space = H.query(P.x, P.y);
+
 					// World space
-					Fvector		wP,wN,B;
-					for (UVtri** it=&*space.begin(); it!=&*space.end(); it++)
+					Fvector		wP, wN, B;
+
+					for each (UVtri* tri in space)
 					{
-						if ((*it)->isInside(P,B)) {
+						if (tri->isInside(P, B))
+						{
 							// We found triangle and have barycentric coords
-							Face	*F	= (*it)->owner;
+							Face	*F = tri->owner;
 							Vertex	*V1 = F->v[0];
 							Vertex	*V2 = F->v[1];
 							Vertex	*V3 = F->v[2];
-							wP.from_bary(V1->P,V2->P,V3->P,B);
-//. не нужно использовать	if (F->Shader().flags.bLIGHT_Sharp)	{ wN.set(F->N); }
-//							else								
-							{ 
-								wN.from_bary(V1->N,V2->N,V3->N,B);	exact_normalize	(wN); 
-								wN.add		(F->N);					exact_normalize	(wN);
+
+							wP.from_bary(V1->P, V2->P, V3->P, B);
+							//. не нужно использовать	if (F->Shader().flags.bLIGHT_Sharp)	{ wN.set(F->N); }
+							//							else								
+							{
+								wN.from_bary(V1->N, V2->N, V3->N, B);
+								exact_normalize(wN);
+
+								wN.add(F->N);
+								exact_normalize(wN);
 							}
-							try {
-								LightPoint	(DB, RCAST_Model, C, wP, wN, *LightsSelected, (b_norgb?LP_dont_rgb:0)|(b_nosun?LP_dont_sun:0)|LP_UseFaceDisable, F); //.
-								Fcount		+= 1;
-							} catch (...) {
+							try
+							{
+								LightPoint(
+									DB,
+									RCAST_Model,
+									C,
+									wP,
+									wN,
+									*LightsSelected,
+									(b_norgb ? LP_dont_rgb : 0) | (b_nosun ? LP_dont_sun : 0) | LP_UseFaceDisable,
+									F
+								); //.
+
+								Fcount += 1;
+							}
+							catch (...)
+							{
 								clMsg("* ERROR (CDB). Recovered. ");
 							}
 							break;
 						}
 					}
-				} 
-			} catch (...) {
+				}
+			}
+			catch (...) {
 				clMsg("* ERROR (Light). Recovered. ");
 			}
-			
+
 			if (Fcount) {
-				C.scale			(Fcount);
-				C.mul			(.5f);
-				lm.surface		[V*lm.width+U]._set(C);
-				lm.marker		[V*lm.width+U] = 255;
-			} else {
-				lm.surface		[V*lm.width+U]._set(C);	// 0-0-0-0-0
-				lm.marker		[V*lm.width+U] = 0;
+				C.scale(Fcount);
+				C.mul(.5f);
+				lm.surface[V*lm.width + U]._set(C);
+				lm.marker[V*lm.width + U] = 255;
+			}
+			else {
+				lm.surface[V*lm.width + U]._set(C);	// 0-0-0-0-0
+				lm.marker[V*lm.width + U] = 0;
 			}
 		}
 	}
 	// *** Render Edges
-	float texel_size = (1.f/float(_max(lm.width,lm.height)))/8.f;
-	for (u32 t=0; t<UVpolys.size(); t++)
+	float texel_size = (1.f / float(_max(lm.width, lm.height))) / 8.f;
+	for (u32 t = 0; t < UVpolys.size(); t++)
 	{
-		UVtri&		T	= UVpolys[t];
-		Face*		F	= T.owner;
-		R_ASSERT	(F);
+		UVtri&		T = UVpolys[t];
+		Face*		F = T.owner;
+		R_ASSERT(F);
 		try {
-			L_Direct_Edge	(DB,LightsSelected, T.uv[0], T.uv[1], F->v[0]->P, F->v[1]->P, F->N, texel_size,F);
-			L_Direct_Edge	(DB,LightsSelected, T.uv[1], T.uv[2], F->v[1]->P, F->v[2]->P, F->N, texel_size,F);
-			L_Direct_Edge	(DB,LightsSelected, T.uv[2], T.uv[0], F->v[2]->P, F->v[0]->P, F->N, texel_size,F);
-		} catch (...)
+			L_Direct_Edge(DB, LightsSelected, T.uv[0], T.uv[1], F->v[0]->P, F->v[1]->P, F->N, texel_size, F);
+			L_Direct_Edge(DB, LightsSelected, T.uv[1], T.uv[2], F->v[1]->P, F->v[2]->P, F->N, texel_size, F);
+			L_Direct_Edge(DB, LightsSelected, T.uv[2], T.uv[0], F->v[2]->P, F->v[0]->P, F->N, texel_size, F);
+		}
+		catch (...)
 		{
 			clMsg("* ERROR (Edge). Recovered. ");
 		}

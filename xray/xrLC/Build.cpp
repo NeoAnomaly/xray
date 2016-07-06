@@ -159,7 +159,10 @@ void CBuild::Run	(LPCSTR P)
 	return;
 #endif
 
-	BuildPortals				(*fs);
+	if (!portals.empty())
+	{
+		BuildPortals(*fs);
+	}
 
 	//****************************************** T-Basis
 	{
