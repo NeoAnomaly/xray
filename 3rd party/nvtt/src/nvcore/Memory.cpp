@@ -34,3 +34,24 @@ void * nv::mem::realloc(void * ptr, size_t size)
 	return ::realloc(ptr, size);
 }
 
+// Override new/delete
+
+//void * operator new (size_t size) throw()
+//{
+//	return nv::mem::malloc(size);
+//}
+//
+//void operator delete (void *p) throw()
+//{
+//	nv::mem::free(p);
+//}
+//
+//void * operator new [](size_t size) throw()
+//{
+//	return nv::mem::malloc(size);
+//}
+//
+//void operator delete [](void * p) throw()
+//{
+//	nv::mem::free(p);
+//}

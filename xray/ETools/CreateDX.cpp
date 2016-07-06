@@ -5,6 +5,10 @@
 #include	"D3DX_Wrapper.h"
 
 #include	"dxerr.h"
+
+#include <Windows.h>
+#include <stdio.h>
+int (WINAPIV * __vsnprintf)(char *, size_t, const char*, va_list) = _vsnprintf;
 // misc
 /*
 __declspec( dllimport ) bool WINAPI FSColorPickerDoModal(unsigned int * currentColor, unsigned int * originalColor, const int initialExpansionState);

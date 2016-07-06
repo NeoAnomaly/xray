@@ -45,13 +45,15 @@ static float processPixel(const FloatImage * img, uint x, uint y)
 	float fx0 = (float) x / w;
 	float fy0 = (float) y / h;
 
-	float best_ratio = INF;
+	float best_ratio = INFINITY;
 	uint best_x = w;
 	uint best_y = h;
+	uint yy = 0;
+	uint xx = 0;
 	
-	for (uint yy = 0; yy < h; yy++)
+	for (yy = 0; yy < h; yy++)
 	{
-		for (uint xx = 0; xx < w; xx++)
+		for (xx = 0; xx < w; xx++)
 		{
 			float ch = d - img->pixel(xx, yy, 0);
 			
@@ -81,7 +83,7 @@ static float processPixel(const FloatImage * img, uint x, uint y)
 		float cw = sqrtf(dx*dx + dy*dy);
 		float ch = d - img->pixel(xx, yy, 0);
 		
-		return min(1, sqrtf(cw / ch));
+		return min(1.f, sqrtf(cw / ch));
 	}
 	
 	return 1;
@@ -113,7 +115,7 @@ FloatImage * createConeMap(const Image * img, Vector4::Arg heightWeights)
 	{
 		for(uint x = 0; x < w; x++)
 		{
-			processPixel(fimage, x, y);
+			processPixel(fimage.ptr(), x, y);
 		}
 	}
 	

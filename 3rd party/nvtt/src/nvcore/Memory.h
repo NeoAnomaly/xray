@@ -25,29 +25,6 @@ namespace nv
 	
 } // nv namespace
 
-
-// Override new/delete
-
-inline void * operator new (size_t size) throw()
-{
-	return nv::mem::malloc(size); 
-}
-
-inline void operator delete (void *p) throw()
-{
-	nv::mem::free(p); 
-}
-
-inline void * operator new [] (size_t size) throw()
-{
-	return nv::mem::malloc(size);
-}
-
-inline void operator delete [] (void * p) throw()
-{
-	nv::mem::free(p); 
-}
-
 /*
 #ifdef _DEBUG
 #define new new(__FILE__, __LINE__)

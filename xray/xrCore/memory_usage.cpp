@@ -124,39 +124,51 @@ u32	mem_usage_impl	(HANDLE heap_handle, u32* pBlocksUsed, u32* pBlocksFree)
 {
 	_HEAPINFO		hinfo;
 	int				heapstatus;
-	hinfo._pentry	= NULL;
-	size_t	total	= 0;
-	u32	blocks_free	= 0;
-	u32	blocks_used	= 0;
-	while( ( heapstatus = heap_walk( heap_handle, &hinfo ) ) == _HEAPOK )
-	{ 
-		if (hinfo._useflag == _USEDENTRY)	{
-			total		+= hinfo._size;
-			blocks_used	+= 1;
-		} else {
-			blocks_free	+= 1;
+	hinfo._pentry = NULL;
+	size_t	total = 0;
+	u32	blocks_free = 0;
+	u32	blocks_used = 0;
+
+	while ((heapstatus = _heapwalk(&hinfo)) == _HEAPOK)
+	{
+		if (hinfo._useflag == _USEDENTRY) 
+		{
+			total += hinfo._size;
+			blocks_used += 1;
+		}
+		else 
+		{
+			blocks_free += 1;
 		}
 	}
-	if (pBlocksFree)	*pBlocksFree= 1024*(u32)blocks_free;
-	if (pBlocksUsed)	*pBlocksUsed= 1024*(u32)blocks_used;
 
-	switch( heapstatus )
+	if (pBlocksFree)
+		*pBlocksFree = 1024 * (u32)blocks_free;
+
+	if (pBlocksUsed)
+		*pBlocksUsed = 1024 * (u32)blocks_used;
+
+	switch (heapstatus)
 	{
 	case _HEAPEMPTY:
 		break;
+
 	case _HEAPEND:
 		break;
+
 	case _HEAPBADPTR:
-		FATAL			("bad pointer to heap");
+		FATAL("bad pointer to heap");
 		break;
+
 	case _HEAPBADBEGIN:
-		FATAL			("bad start of heap");
+		FATAL("bad start of heap");
 		break;
+
 	case _HEAPBADNODE:
-		FATAL			("bad node in heap");
+		FATAL("bad node in heap");
 		break;
 	}
-	return (u32) total;
+	return (u32)total;
 }
 
 u32		xrMemory::mem_usage		(u32* pBlocksUsed, u32* pBlocksFree)
