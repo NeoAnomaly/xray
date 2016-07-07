@@ -7,7 +7,6 @@
 #include "Lightmap.h"
 #include "xrDeflector.h"
 #include "xrDXTC.h"
-#include "xrImage_Filter.h"
 
 xr_vector<CLightmap*>		g_lightmaps;
 

@@ -37,14 +37,14 @@
     <Filter Include="%2a%2a%2a COMPILER %2a%2a%2a\Internal">
       <UniqueIdentifier>{2c7e8e1c-5e80-40f5-9be9-5d368ab69074}</UniqueIdentifier>
     </Filter>
-    <Filter Include="%2a%2a%2a COMPILER %2a%2a%2a\Internal\Targa">
-      <UniqueIdentifier>{e000557c-3c6b-4102-bb54-7cf2e230f81f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="%2a%2a%2a COMPILER %2a%2a%2a\Internal\Targa\ILoader">
-      <UniqueIdentifier>{9ae30efe-dd06-414a-86c7-ebbbee4feee0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="%2a%2a%2a COMPILER %2a%2a%2a\Model">
       <UniqueIdentifier>{92398260-d98d-47ae-a0ec-9126261493b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="- OLD -\Targa">
+      <UniqueIdentifier>{e000557c-3c6b-4102-bb54-7cf2e230f81f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="- OLD -\Targa\ILoader">
+      <UniqueIdentifier>{9ae30efe-dd06-414a-86c7-ebbbee4feee0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -159,9 +159,6 @@
     <ClInclude Include="xrDeflector.h">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Deflector</Filter>
     </ClInclude>
-    <ClInclude Include="xrImage_Filter.h">
-      <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Deflector</Filter>
-    </ClInclude>
     <ClInclude Include="xrImage_Resampler.h">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Deflector</Filter>
     </ClInclude>
@@ -183,14 +180,11 @@
     <ClInclude Include="xrIsect.h">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Internal</Filter>
     </ClInclude>
-    <ClInclude Include="xrUVpoint.h">
-      <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Internal</Filter>
-    </ClInclude>
     <ClInclude Include="tga.h">
-      <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Internal\Targa</Filter>
+      <Filter>- OLD -\Targa</Filter>
     </ClInclude>
     <ClInclude Include="Image.h">
-      <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Internal\Targa\ILoader</Filter>
+      <Filter>- OLD -\Targa\ILoader</Filter>
     </ClInclude>
     <ClInclude Include="fitter.h">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Model</Filter>
@@ -202,6 +196,12 @@
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Model</Filter>
     </ClInclude>
     <ClInclude Include="xrGameMaterials.h" />
+    <ClInclude Include="xrUVpoint.h">
+      <Filter>- OLD -</Filter>
+    </ClInclude>
+    <ClInclude Include="xrImage_Filter.h">
+      <Filter>- OLD -</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="StdAfx.cpp">
@@ -354,14 +354,8 @@
     <ClCompile Include="xrDeflectorLight.cpp">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Deflector</Filter>
     </ClCompile>
-    <ClCompile Include="xrImage_Filter.cpp">
-      <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Deflector</Filter>
-    </ClCompile>
     <ClCompile Include="xrImage_Resampler.cpp">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Deflector</Filter>
-    </ClCompile>
-    <ClCompile Include="fmesh.cpp">
-      <Filter>%2a%2a%2a COMPILER %2a%2a%2a\XRAY</Filter>
     </ClCompile>
     <ClCompile Include="OGF_Face.cpp">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a\XRAY</Filter>
@@ -382,10 +376,10 @@
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Internal</Filter>
     </ClCompile>
     <ClCompile Include="tga.cpp">
-      <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Internal\Targa</Filter>
+      <Filter>- OLD -\Targa</Filter>
     </ClCompile>
     <ClCompile Include="Image.cpp">
-      <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Internal\Targa\ILoader</Filter>
+      <Filter>- OLD -\Targa\ILoader</Filter>
     </ClCompile>
     <ClCompile Include="fitter.cpp">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Model</Filter>
@@ -425,6 +419,12 @@
     </ClCompile>
     <ClCompile Include="xrMU_Model_Load.cpp">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="fmesh.cpp">
+      <Filter>%2a%2a%2a COMPILER %2a%2a%2a\XRAY</Filter>
+    </ClCompile>
+    <ClCompile Include="xrImage_Filter.cpp">
+      <Filter>- OLD -</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

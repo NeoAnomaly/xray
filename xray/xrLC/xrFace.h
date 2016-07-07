@@ -147,8 +147,6 @@ typedef vecAdj::iterator			vecAdjIt;
 
 extern const int edge2idx			[3][2];
 
-#include		"xrUVpoint.h"
-
 class Vertex	: public base_Vertex
 {
 public:

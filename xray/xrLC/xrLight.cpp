@@ -30,22 +30,24 @@ public:
 		for (;;) 
 		{
 			// Get task
-			task_CS.Enter		();
-			thProgress			= 1.f - float(task_pool.size())/float(g_deflectors.size());
-			if (task_pool.empty())	
+			task_CS.Enter();
+			thProgress = 1.f - float(task_pool.size()) / float(g_deflectors.size());
+			if (task_pool.empty())
 			{
-				task_CS.Leave		();
+				task_CS.Leave();
 				return;
 			}
 
-			D					= g_deflectors[task_pool.back()];
-			task_pool.pop_back	();
-			task_CS.Leave		();
+			D = g_deflectors[task_pool.back()];
+			task_pool.pop_back();
+			task_CS.Leave();
 
 			// Perform operation
-			try {
-				D->Light	(&DB,&LightsSelected,H);
-			} catch (...)
+			try 
+			{
+				D->Light(&DB, &LightsSelected, H);
+			}
+			catch (...)
 			{
 				clMsg("* ERROR: CLMThread::Execute - light");
 			}
@@ -65,22 +67,29 @@ void CBuild::Light()
 
 	//****************************************** Lmaps
 	{
-		FPU::m64r		();
-		Phase			("LIGHT: LMaps...");
-		mem_Compact		();
+		FPU::m64r();
+		Phase("LIGHT: LMaps...");
+		mem_Compact();
 
 		// Randomize deflectors
-		std::random_shuffle	(g_deflectors.begin(),g_deflectors.end());
-		for					(u32 dit = 0; dit<g_deflectors.size(); dit++)	task_pool.push_back(dit);
+		std::random_shuffle(g_deflectors.begin(), g_deflectors.end());
+
+		for (u32 dit = 0; dit < g_deflectors.size(); dit++)
+			task_pool.push_back(dit);
 
 		// Main process (4 threads)
-		Status			("Lighting...");
+		Status("Lighting...");
+
 		CThreadManager	threads;
-		const	u32	thNUM	= 6;
-		CTimer	start_time;	start_time.Start();				
-		for				(int L=0; L<thNUM; L++)	threads.start(xr_new<CLMThread> (L));
-		threads.wait	(500);
-		clMsg			("%f seconds",start_time.GetElapsed_sec());
+		const	u32	thNUM = 6;
+		CTimer	start_time;	start_time.Start();
+
+		for (int L = 0; L < thNUM; L++)	
+			threads.start(xr_new<CLMThread>(L));
+
+		threads.wait(500);
+
+		clMsg("%f seconds", start_time.GetElapsed_sec());
 	}
 
 	//****************************************** Vertex

@@ -42,16 +42,22 @@ void	CThreadManager::wait	(u32	sleep_time)
 			else				sprintf	(P," %3.1f",threads[ID]->thPerformance);
 			strcat				(perf,P);
 		}
+
 		if (threads[0]->thMonitor)
 		{
 			Status	("Performance: %3.1f :%s",sumPerformance,perf);
 		}
+		
 		Progress(sumProgress/float(threads.size()));
-		if (sumComplete == threads.size())	break;
+
+		if (sumComplete == threads.size())	
+			break;
 	}
 	
 	// Delete threads
 	for (u32 thID=0; thID<threads.size(); thID++)
-		if (threads[thID]->thDestroyOnComplete)	xr_delete(threads[thID]);
+		if (threads[thID]->thDestroyOnComplete)	
+			xr_delete(threads[thID]);
+
 	threads.clear	();
 }
