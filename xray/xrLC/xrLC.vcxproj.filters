@@ -162,9 +162,6 @@
     <ClInclude Include="xrImage_Resampler.h">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Deflector</Filter>
     </ClInclude>
-    <ClInclude Include="ArbitraryList.h">
-      <Filter>%2a%2a%2a COMPILER %2a%2a%2a\XRAY</Filter>
-    </ClInclude>
     <ClInclude Include="OGF_Face.h">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a\XRAY</Filter>
     </ClInclude>
@@ -189,9 +186,6 @@
     <ClInclude Include="fitter.h">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Model</Filter>
     </ClInclude>
-    <ClInclude Include="PropSlimTools.h">
-      <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Model</Filter>
-    </ClInclude>
     <ClInclude Include="xrMU_Model.h">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Model</Filter>
     </ClInclude>
@@ -201,6 +195,12 @@
     </ClInclude>
     <ClInclude Include="xrImage_Filter.h">
       <Filter>- OLD -</Filter>
+    </ClInclude>
+    <ClInclude Include="ArbitraryList.h">
+      <Filter>%2a%2a%2a COMPILER %2a%2a%2a\XRAY</Filter>
+    </ClInclude>
+    <ClInclude Include="PropSlimTools.h">
+      <Filter>%2a%2a%2a COMPILER %2a%2a%2a\XRAY</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -608,6 +608,7 @@
       <TargetMachine>NotSet</TargetMachine>
       <AdditionalLibraryDirectories>$(SolutionDir)_Lib\$(Configuration)</AdditionalLibraryDirectories>
       <Profile>true</Profile>
+      <ShowProgress>NotSet</ShowProgress>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -653,6 +654,7 @@
       <ImportLibrary>$(SolutionDir)_Lib\$(Configuration)\$(ProjectName).lib</ImportLibrary>
       <AdditionalLibraryDirectories>$(SolutionDir)_Lib\$(Configuration)</AdditionalLibraryDirectories>
       <Profile>true</Profile>
+      <ShowProgress>NotSet</ShowProgress>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">
@@ -914,6 +916,7 @@
       <ImportLibrary>$(SolutionDir)_Lib\$(Configuration)\$(ProjectName).lib</ImportLibrary>
       <TargetMachine>NotSet</TargetMachine>
       <AdditionalLibraryDirectories>$(SolutionDir)_Lib\$(Configuration)</AdditionalLibraryDirectories>
+      <ShowProgress>NotSet</ShowProgress>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Priquel|x64'">
@@ -959,6 +962,7 @@
       <LargeAddressAware>true</LargeAddressAware>
       <ImportLibrary>$(SolutionDir)_Lib\$(Configuration)\$(ProjectName).lib</ImportLibrary>
       <AdditionalLibraryDirectories>$(SolutionDir)_Lib\$(Configuration)</AdditionalLibraryDirectories>
+      <ShowProgress>NotSet</ShowProgress>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Priquel|Win32'">
@@ -1088,6 +1092,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ArbitraryList.h" />
+    <ClInclude Include="PropSlimTools.h" />
     <ClInclude Include="_d3d_extensions.h" />
     <ClInclude Include="defines.h" />
     <ClInclude Include="StdAfx.h" />
@@ -1127,7 +1133,6 @@
     <ClInclude Include="xrDeflector.h" />
     <ClInclude Include="xrImage_Filter.h" />
     <ClInclude Include="xrImage_Resampler.h" />
-    <ClInclude Include="ArbitraryList.h" />
     <ClInclude Include="OGF_Face.h" />
     <ClInclude Include="R_light.h" />
     <ClInclude Include="vbm.h" />
@@ -1137,7 +1142,6 @@
     <ClInclude Include="tga.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="fitter.h" />
-    <ClInclude Include="PropSlimTools.h" />
     <ClInclude Include="xrMU_Model.h" />
     <ClInclude Include="xrGameMaterials.h" />
   </ItemGroup>
