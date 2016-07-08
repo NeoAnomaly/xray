@@ -201,7 +201,7 @@ void LightPoint(CDB::COLLIDER* DB, CDB::MODEL* MDL, base_color_c &C, Fvector &P,
 	if (0 == (flags&LP_dont_rgb))
 	{
 		DB->ray_options(0);
-		for (xr_vector<R_Light>::iterator it = lights.hemi.begin(); it != lights.hemi.end(); ++it)
+		for (xr_vector<R_Light>::iterator it = lights.rgb.begin(); it != lights.rgb.end(); ++it)
 		{
 			R_Light* L = &*it;
 
@@ -278,7 +278,7 @@ void LightPoint(CDB::COLLIDER* DB, CDB::MODEL* MDL, base_color_c &C, Fvector &P,
 	if (0 == (flags&LP_dont_sun))
 	{
 		DB->ray_options(0);
-		for (xr_vector<R_Light>::iterator it = lights.hemi.begin(); it != lights.hemi.end(); ++it)
+		for (xr_vector<R_Light>::iterator it = lights.sun.begin(); it != lights.sun.end(); ++it)
 		{
 			R_Light* L = &*it;
 

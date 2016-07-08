@@ -95,7 +95,8 @@ void CBuild::BuildCForm	()
 		cfVertices->reserve	(g_vertices.size());
 		std::sort(cfFaces->begin(),cfFaces->end());
 		for (u32 V=0; V<g_vertices.size(); V++)
-			if (cfVertexMarks[V]) cfVertices->push_back(g_vertices[V]);
+			if (cfVertexMarks[V]) 
+				cfVertices->push_back(g_vertices[V]);
 	}
 
 	float	p_total = 0;

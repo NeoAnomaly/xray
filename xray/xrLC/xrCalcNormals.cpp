@@ -70,7 +70,8 @@ void CBuild::CalcNormals()
 			for (u32 a=0; a<V->adjacent.size(); a++)
 			{
 				Face* Fn		= V->adjacent[a];
-				if (Fn->flags.bSplitted) continue;
+				if (Fn->flags.bSplitted)
+					continue;
 				RecurseTri		(Fn,V,new_adj,sm_cos);
 				break			;
 			}

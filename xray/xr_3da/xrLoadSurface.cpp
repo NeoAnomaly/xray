@@ -70,7 +70,7 @@ void	Surface_Init()
 	Surface_FormatExt(FIF_PSD);
 	Surface_FormatExt(FIF_IFF);
 
-	Msg("* %d supported formats", formats.size());
+	Msg("* %d supported formats:", formats.size());	
 }
 
 BOOL	Surface_Detect(string_path& F, LPSTR N)
@@ -99,15 +99,19 @@ FIBITMAP*	Surface_Load(char* full_name)
 	// load
 	FREE_IMAGE_FORMAT	fif = FreeImage_GetFIFFromFilename(full_name);
 	FIBITMAP*			map = FreeImage_Load(fif, full_name);
-	if (0 == map)			return NULL;
+	if (0 == map)			
+		return NULL;
 
 	// check if already 32bpp
-	if (32 == FreeImage_GetBPP(map))	return map;
+	if (32 == FreeImage_GetBPP(map))	
+		return map;
 
 	// convert
 	FIBITMAP*			map32 = FreeImage_ConvertTo32Bits(map);
-	if (0 == map32)		map32 = map;
-	else				FreeImage_Unload(map);
+	if (0 == map32)		
+		map32 = map;
+	else				
+		FreeImage_Unload(map);
 
 	return				map32;
 }
@@ -118,11 +122,19 @@ u32*	Surface_Load(char* name, u32& w, u32& h)
 		*(strchr(name, '.')) = 0;
 
 	// detect format
-	string_path		full;
+	string_path	full;
 	if (!Surface_Detect(full, name))
+	{
+		Msg("!	Error: Cannot detect surface format");
 		return NULL;
+	}
 
 	FIBITMAP* map32 = Surface_Load(full);
+	if (!map32)
+	{
+		Msg("!	Error: Cannot load surface(format: %s)", (strchr(full, '.') ? strchr(full, '.') : ""));
+		return NULL;
+	}
 
 	h = FreeImage_GetHeight(map32);
 	w = FreeImage_GetWidth(map32);
@@ -132,5 +144,6 @@ u32*	Surface_Load(char* name, u32& w, u32& h)
 	u32*		memDATA = (u32*)(FreeImage_GetScanLine(map32, 0));
 	CopyMemory(memPTR, memDATA, memSize);
 	FreeImage_Unload(map32);
+
 	return		memPTR;
 }
