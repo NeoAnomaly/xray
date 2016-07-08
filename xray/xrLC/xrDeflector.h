@@ -20,8 +20,7 @@ struct lm_layer
 	u32						width;
 	u32						height;
 	xr_vector<base_color>	surface;
-	xr_vector<u8>			marker;
-	LMODE					mode;	
+	xr_vector<u8>			marker;	
 
 	void					create			(u32 w, u32 h)
 	{

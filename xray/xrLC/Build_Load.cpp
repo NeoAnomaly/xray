@@ -7,15 +7,22 @@ extern volatile u32		dwInvalidFaces;
 template <class T>
 void transfer(const char *name, xr_vector<T> &dest, IReader& F, u32 chunk)
 {
-	IReader*	O	= F.open_chunk(chunk);
-	u32		count	= O?(O->length()/sizeof(T)):0;
-	clMsg			("* %16s: %d",name,count);
-	if (count)  
+	IReader*	O = F.open_chunk(chunk);
+	if (!O)
+	{
+		clMsg("* ERROR:Can't transfer %s.", name);
+		return;
+	}
+
+	u32	count = (O->length() / sizeof(T));
+	clMsg("* %16s: %d", name, count);
+	if (count)
 	{
 		dest.reserve(count);
-		dest.insert	(dest.begin(), (T*)O->pointer(), (T*)O->pointer() + count);
+		dest.insert(dest.begin(), (T*)O->pointer(), (T*)O->pointer() + count);
 	}
-	if (O)		O->close	();
+
+	O->close();
 }
 
 extern u32*		Surface_Load	(char* name, u32& w, u32& h);
@@ -338,7 +345,9 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS)
 				BT.THM.width			= THM->r_u32();
 				BT.THM.height           = THM->r_u32();
 				BOOL			bLOD=FALSE;
-				if (N[0]=='l' && N[1]=='o' && N[2]=='d' && N[3]=='\\') bLOD = TRUE;
+
+				if (N[0]=='l' && N[1]=='o' && N[2]=='d' && N[3]=='\\') 
+					bLOD = TRUE;
 
 				// load surface if it has an alpha channel or has "implicit lighting" flag
 				BT.dwWidth	= BT.THM.width;

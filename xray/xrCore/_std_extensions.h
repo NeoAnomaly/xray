@@ -69,16 +69,19 @@ struct XRCORE_API xr_token
 
 IC LPCSTR get_token_name(xr_token* tokens, int key)
 {
-    for (int k=0; tokens[k].name; k++)
-    	if (key==tokens[k].id) return tokens[k].name;
+    for (size_t k=0; tokens[k].name; k++)
+    	if (key==tokens[k].id) 
+			return tokens[k].name;
+
     return "";
 }
 
 IC int get_token_id(xr_token* tokens, LPCSTR key)
 {
-    for (int k=0; tokens[k].name; k++)
+    for (size_t k=0; tokens[k].name; k++)
     	if ( stricmp(tokens[k].name,key)==0 ) 
 			return tokens[k].id;
+
     return -1;
 }
 

@@ -3,6 +3,7 @@
 
 # Project specific
 tests/
+xray_sdk/
 
 # User-specific files
 *.suo

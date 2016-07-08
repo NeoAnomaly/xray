@@ -162,7 +162,7 @@ void CBuild::BuildCForm	()
 	MFS->w			(&hdr,sizeof(hdr));
 
 	// Data
-	MFS->w			(CL.getV(),(u32)CL.getVS()*sizeof(Fvector));
+	MFS->w			(CL.getV(),(u32)(CL.getVS()*sizeof(Fvector)));
 
 #ifdef _WIN64
 	size_t t_size = CL.getTS();

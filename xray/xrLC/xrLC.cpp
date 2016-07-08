@@ -137,7 +137,8 @@ void Startup(LPSTR     lpCmdLine)
 	SetPriorityClass(GetCurrentProcess(), NORMAL_PRIORITY_CLASS);
 
 	// Load project
-	name[0] = 0;				sscanf(strstr(cmd, "-f") + 2, "%s", name);
+	name[0] = 0;				
+	sscanf(strstr(cmd, "-f") + 2, "%s", name);
 	string_path				prjName;
 	FS.update_path(prjName, "$game_levels$", strconcat(sizeof(prjName), prjName, name, "\\build.prj"));
 	string256				phaseName;
@@ -196,9 +197,9 @@ void Startup(LPSTR     lpCmdLine)
 	xr_delete(pBuild);
 
 	// Show statistic
-	extern	std::string make_time(u32 sec);
+	extern	std::string make_time(u32 msec);
 	u32	dwEndTime = dwStartupTime.GetElapsed_ms();
-	sprintf(inf, "Time elapsed: %s", make_time(dwEndTime / 1000).c_str());
+	sprintf(inf, "Time elapsed: %s", make_time(dwEndTime).c_str());
 	clMsg("Build succesful!\n%s", inf);
 	MessageBox(logWindow, inf, "Congratulation!", MB_OK | MB_ICONINFORMATION);
 
