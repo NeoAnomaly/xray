@@ -187,6 +187,7 @@ void Startup(LPSTR     lpCmdLine)
 	Phase("Converting data structures...");
 	pBuild = xr_new<CBuild>();
 	pBuild->Load(Params, *F);
+	pBuild->InitLightingCL();
 	FS.r_close(F);
 
 	// Call for builder

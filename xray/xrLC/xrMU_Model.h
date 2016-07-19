@@ -99,6 +99,7 @@ public:
 	void					calc_faceopacity	();
 	void					calc_lighting		(xr_vector<base_color>& dest, Fmatrix& xform, CDB::MODEL* M, base_lighting& lights, u32 flags);
 	void					calc_lighting		();
+	void calc_lighting_cl();
 	void					calc_ogf			();
 	void					export_geometry		();
 	void					export_cform_rcast	(CDB::CollectorPacked& CL, Fmatrix& xform);

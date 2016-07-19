@@ -405,4 +405,26 @@ IC _quaternion<T>& _quaternion<T>::set(const _matrix<T>& M)
 #pragma deprecated("MIN","MAX","ABS",fabs,fabsf,sqrt,sqrtf,malloc,free,calloc,realloc,memmove,memset,strdup,strlen,strcmp,sin,cos,sinf,cosf)
 #endif
 
+template<class T>
+IC _vector3<T> v3Min(_vector3<T> v1, _vector3<T> v2)
+{
+	//_vector3<T> result = v1;
+	//result.min(v2);
+	_vector3<T> result;
+
+	result.set(_min(v1.x, v2.x), _min(v1.y, v2.y), _min(v1.z, v2.z));
+
+	return result;
+}
+
+template<class T>
+IC _vector3<T> v3Max(_vector3<T> v1, _vector3<T> v2)
+{
+	_vector3<T> result;
+
+	result.set(_max(v1.x, v2.x), _max(v1.y, v2.y), _max(v1.z, v2.z));
+
+	return result;
+}
+
 #endif

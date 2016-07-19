@@ -46,6 +46,15 @@
     <Filter Include="- OLD -\Targa\ILoader">
       <UniqueIdentifier>{9ae30efe-dd06-414a-86c7-ebbbee4feee0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="LightingCL">
+      <UniqueIdentifier>{f40752bb-c88d-4069-827c-b8df5f1bed52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LightingCL\Interfaces">
+      <UniqueIdentifier>{307d884c-4c59-440f-abac-41f87f4b68c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LightingCL\Intersector">
+      <UniqueIdentifier>{6da6f1e9-2987-4b92-b9ca-77de108a8d02}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_d3d_extensions.h">
@@ -201,6 +210,21 @@
     </ClInclude>
     <ClInclude Include="PropSlimTools.h">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a\XRAY</Filter>
+    </ClInclude>
+    <ClInclude Include="LightingCL\ILightingCLApi.h">
+      <Filter>LightingCL\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="LightingCL\LightingCLApi.h">
+      <Filter>LightingCL</Filter>
+    </ClInclude>
+    <ClInclude Include="LightingCL\BVHIntersector.h">
+      <Filter>LightingCL\Intersector</Filter>
+    </ClInclude>
+    <ClInclude Include="LightingCL\BVHBuilder.h">
+      <Filter>LightingCL\Intersector</Filter>
+    </ClInclude>
+    <ClInclude Include="LightingCL\PlainBVHTranslator.h">
+      <Filter>LightingCL\Intersector</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -425,6 +449,21 @@
     </ClCompile>
     <ClCompile Include="xrImage_Filter.cpp">
       <Filter>- OLD -</Filter>
+    </ClCompile>
+    <ClCompile Include="LightingCL\LightingCLApi.cpp">
+      <Filter>LightingCL</Filter>
+    </ClCompile>
+    <ClCompile Include="LightingCL\BVHIntersector.cpp">
+      <Filter>LightingCL\Intersector</Filter>
+    </ClCompile>
+    <ClCompile Include="LightingCL\BVHBuilder.cpp">
+      <Filter>LightingCL\Intersector</Filter>
+    </ClCompile>
+    <ClCompile Include="Build_LightingCL.cpp">
+      <Filter>%2a%2a%2a COMPILER %2a%2a%2a</Filter>
+    </ClCompile>
+    <ClCompile Include="LightingCL\PlainBVHTranslator.cpp">
+      <Filter>LightingCL\Intersector</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -26,7 +26,8 @@ BOOL					gl_linear = FALSE;
 
 //////////////////////////////////////////////////////////////////////
 
-CBuild::CBuild()
+CBuild::CBuild():
+	m_LightingCLApi(nullptr)
 {
 }
 
@@ -96,6 +97,73 @@ void CBuild::Light_prepare()
 
 	for (u32 m = 0; m < mu_models.size(); m++)
 		mu_models[m]->calc_faceopacity();
+}
+
+void CBuild::RayTests(LPCSTR path)
+{
+	Status("Start ray testing case");
+
+	Phase("Calculate normals...");
+	for (u32 m = 0; m<mu_models.size(); m++)
+		mu_models[m]->calc_normals();
+
+	mem_Compact();
+	Light_prepare();
+
+	// Light models
+	Phase("Prepare for lighting...");
+	for (u32 m = 0; m < pBuild->mu_models.size(); m++)
+	{
+		pBuild->mu_models[m]->calc_materials();
+	}
+
+#if (ERT_DISABLE_CLASSIC_METHOD == 0)
+	Phase("Lighting(xrCDB)...");
+#if (ERT_FIRST_MU_TEST_CASE == 1)
+	for (u32 m = 0; m < 1; m++)
+#else
+	for (u32 m = 0; m < pBuild->mu_models.size(); m++)
+#endif
+	{
+		pBuild->mu_models[m]->calc_lighting();
+
+		Progress(m / pBuild->mu_models.size());
+	}
+#endif
+
+	for (u32 i = 0; i < LightingCL::ILightingCLApi::GetDeviceCount(); ++i)
+	{
+		LightingCL::DeviceInfo deviceInfo;
+		LightingCL::ILightingCLApi::GetDeviceInfo(i, deviceInfo);
+
+		xr_string phaseName;
+		phaseName.resize(1024);
+
+		sprintf_s(&*phaseName.begin(), phaseName.size(), "LightingCL(on %s device)...", deviceInfo.name.c_str());
+
+		Phase(phaseName.c_str());
+
+		if (m_LightingCLApi)
+		{
+			LightingCL::ILightingCLApi::Delete(m_LightingCLApi);
+
+			m_LightingCLApi = LightingCL::ILightingCLApi::Create(i);
+		}
+
+		
+#if (ERT_FIRST_MU_TEST_CASE == 1)
+		for (u32 m = 0; m < 1; m++)
+#else
+		for (u32 m = 0; m < pBuild->mu_models.size(); m++)
+#endif
+		{
+			pBuild->mu_models[m]->calc_lighting_cl();
+
+			Progress((float)m / (float)pBuild->mu_models.size());
+		}
+	}
+
+	Phase("Ray testing complete");
 }
 
 

@@ -14,6 +14,8 @@
 #include "shader_xrlc.h"
 #include "xrMU_Model.h"
 
+#include "LightingCL\ILightingCLApi.h"
+
 #pragma comment(lib,"dxt.lib")
 extern "C" bool __declspec(dllimport) __stdcall DXTCompress(LPCSTR out_name, u8* raw_data, u8* normal_map, u32 w, u32 h, u32 pitch, STextureParams* fmt, u32 depth);
 
@@ -82,6 +84,12 @@ public:
 	void	Load					(const b_params& P, const IReader&  fs);
 	void	Run						(LPCSTR path);
 
+	void InitLightingCL();
+
+	LightingCL::ILightingCLApi* GetLightingCLApi() { return m_LightingCLApi; }
+
+	void	RayTests(LPCSTR path);
+
 	void	Tesselate				();
 	void	PreOptimize				();
 	void	CorrectTJunctions		();
@@ -121,6 +129,8 @@ public:
 
 	CBuild	();
 	~CBuild	();
+private:
+	LightingCL::ILightingCLApi* m_LightingCLApi;
 };
 
 extern CBuild* pBuild;

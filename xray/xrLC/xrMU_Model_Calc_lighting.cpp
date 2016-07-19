@@ -216,6 +216,33 @@ void xrMU_Model::calc_lighting	()
 	clMsg					("model '%s' - REF_lighted.",*m_name);
 }
 
+void xrMU_Model::calc_lighting_cl()
+{
+	// BB
+	Fbox bounds;
+	bounds.invalidate();
+
+	for (v_vertices_it vit = m_vertices.begin(); vit != m_vertices.end(); ++vit)
+		bounds.modify((*vit)->P);
+
+	// Export CForm
+	CDB::CollectorPacked collector(bounds, (u32)m_vertices.size(), (u32)m_faces.size());
+
+	export_cform_rcast(collector, Fidentity);
+
+	LightingCL::ILightingCLApi* api = pBuild->GetLightingCLApi();
+	
+	clMsg("...model '%s' - building collision", *m_name);
+
+	api->BuildCollisionModel(collector, pBuild->materials, pBuild->textures);
+
+	clMsg("...model '%s' - lighting CL", *m_name);
+
+	//calc_lighting(color, Fidentity, M, pBuild->L_static, LP_dont_rgb + LP_dont_sun);
+
+	clMsg("model '%s' - REF_lighted.", *m_name);
+}
+
 template <typename T, typename T2>
 T	simple_optimize				(xr_vector<T>& A, xr_vector<T>& B, T2& _scale, T2& _bias)
 {

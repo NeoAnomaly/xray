@@ -271,46 +271,46 @@
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release_w_STLPORT|Win32'">$(SolutionDir)3rd party\dxsdk\include;X:\3rd party\stlport\stlport;X:\xray\xrLua\src;X:\3rd party\FreeImage\FreeImage\Source;X:\xray\xrCore;X:\3rd party\MagicSoftware\FreeMagic\Include;X:\3rd party\OpenAL\Include;X:\3rd party\luabind_old\luabind;X:\3rd party\loki;X:\3rd party\eax\Include;X:\3rd party\boost;$(WindowsSdkDir)include;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)3rd party\dxsdk\include;X:\trunk\xray\xrLua\src;X:\trunk\3rd party\FreeImage\FreeImage\Source;X:\trunk\xray\xrCore;X:\trunk\3rd party\MagicSoftware\FreeMagic\Include;X:\trunk\3rd party\OpenAL\Include;X:\trunk\3rd party\luabind_old\luabind;X:\trunk\3rd party\loki;X:\trunk\3rd party\eax\Include;X:\trunk\3rd party\boost;$(WindowsSdkDir)include;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release_w_STLPORT|x64'">$(SolutionDir)3rd party\dxsdk\include;X:\xray\xrLua\src;X:\3rd party\FreeImage;X:\xray\xrCore;X:\3rd party\MagicSoftware\FreeMagic\Include;C:\Program Files %28x86%29\OpenAL 1.1 SDK\include;X:\3rd party\luabind_old\luabind;X:\3rd party\loki;X:\3rd party\eax\Include;X:\3rd party\Xiph\Include;X:\3rd party\boost;$(WindowsSdkDir)include;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)3rd party\dxsdk\lib\$(Platform);$(LibraryPath)</LibraryPath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release_w_STLPORT|Win32'">$(SolutionDir)3rd party\dxsdk\lib\$(Platform);$(LibraryPath)</LibraryPath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)3rd party\dxsdk\lib\$(Platform);$(LibraryPath)</LibraryPath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release_w_STLPORT|x64'">$(SolutionDir)3rd party\dxsdk\lib\$(Platform);$(LibraryPath)</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)3rd party\dxsdk\lib\$(Platform);c:\Program Files (x86)\AMD APP SDK\3.0\lib\x86\;$(LibraryPath)</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release_w_STLPORT|Win32'">$(SolutionDir)3rd party\dxsdk\lib\$(Platform);c:\Program Files (x86)\AMD APP SDK\3.0\lib\x86\;$(LibraryPath)</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)3rd party\dxsdk\lib\$(Platform);c:\Program Files (x86)\AMD APP SDK\3.0\lib\x86_64\;$(LibraryPath)</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release_w_STLPORT|x64'">$(SolutionDir)3rd party\dxsdk\lib\$(Platform);c:\Program Files (x86)\AMD APP SDK\3.0\lib\x86_64\;$(LibraryPath)</LibraryPath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)3rd party\dxsdk\include;X:\trunk\xray\xrLua\src;X:\trunk\3rd party\FreeImage\FreeImage\Source;X:\trunk\xray\xrCore;X:\trunk\3rd party\MagicSoftware\FreeMagic\Include;X:\trunk\3rd party\OpenAL\Include;X:\trunk\3rd party\luabind_old\luabind;X:\trunk\3rd party\loki;X:\trunk\3rd party\eax\Include;X:\trunk\3rd party\boost;$(WindowsSdkDir)include;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)3rd party\dxsdk\lib\$(Platform);$(LibraryPath)</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)3rd party\dxsdk\lib\$(Platform);c:\Program Files (x86)\AMD APP SDK\3.0\lib\x86\;$(LibraryPath)</LibraryPath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)3rd party\dxsdk\include;X:\trunk\xray\xrLua\src;X:\trunk\3rd party\FreeImage\FreeImage\Source;X:\trunk\xray\xrCore;X:\trunk\3rd party\MagicSoftware\FreeMagic\Include;X:\trunk\3rd party\OpenAL\Include;X:\trunk\3rd party\luabind_old\luabind;X:\trunk\3rd party\loki;X:\trunk\3rd party\eax\Include;X:\trunk\3rd party\boost;$(WindowsSdkDir)include;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(FrameworkSDKDir)\include</IncludePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)3rd party\dxsdk\lib\$(Platform);$(LibraryPath)</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)3rd party\dxsdk\lib\$(Platform);c:\Program Files (x86)\AMD APP SDK\3.0\lib\x86_64\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Priquel|Win32'">
     <IncludePath>$(SolutionDir)3rd party\dxsdk\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)3rd party\dxsdk\lib\$(Platform);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)3rd party\dxsdk\lib\$(Platform);c:\Program Files (x86)\AMD APP SDK\3.0\lib\x86\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Priquel|Win32'">
     <IncludePath>$(SolutionDir)3rd party\dxsdk\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)3rd party\dxsdk\lib\$(Platform);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)3rd party\dxsdk\lib\$(Platform);c:\Program Files (x86)\AMD APP SDK\3.0\lib\x86\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">
     <IncludePath>$(SolutionDir)3rd party\dxsdk\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)3rd party\dxsdk\lib\$(Platform);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)3rd party\dxsdk\lib\$(Platform);c:\Program Files (x86)\AMD APP SDK\3.0\lib\x86\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Mixed_Priquel|Win32'">
     <IncludePath>$(SolutionDir)3rd party\dxsdk\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)3rd party\dxsdk\lib\$(Platform);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)3rd party\dxsdk\lib\$(Platform);c:\Program Files (x86)\AMD APP SDK\3.0\lib\x86\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Priquel|x64'">
     <IncludePath>$(SolutionDir)3rd party\dxsdk\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)3rd party\dxsdk\lib\$(Platform);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)3rd party\dxsdk\lib\$(Platform);c:\Program Files (x86)\AMD APP SDK\3.0\lib\x86_64\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Priquel|x64'">
     <IncludePath>$(SolutionDir)3rd party\dxsdk\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)3rd party\dxsdk\lib\$(Platform);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)3rd party\dxsdk\lib\$(Platform);c:\Program Files (x86)\AMD APP SDK\3.0\lib\x86_64\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">
     <IncludePath>$(SolutionDir)3rd party\dxsdk\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)3rd party\dxsdk\lib\$(Platform);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)3rd party\dxsdk\lib\$(Platform);c:\Program Files (x86)\AMD APP SDK\3.0\lib\x86_64\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Mixed_Priquel|x64'">
     <IncludePath>$(SolutionDir)3rd party\dxsdk\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)3rd party\dxsdk\lib\$(Platform);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)3rd party\dxsdk\lib\$(Platform);c:\Program Files (x86)\AMD APP SDK\3.0\lib\x86_64\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Midl>
@@ -329,7 +329,7 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\xrQSlim\src;..\xrCore;$(SolutionDir)3rd party\FreeImage\FreeImage\;$(SolutionDir)3rd party\MagicSoftware\FreeMagic\Include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\xrQSlim\src;..\xrCore;$(SolutionDir)3rd party\FreeImage\FreeImage\;$(SolutionDir)3rd party\MagicSoftware\FreeMagic\Include\;$(SolutionDir)3rd party\FireRays_SDK\FireRays\include\;$(SolutionDir)3rd party\OpenCL;$(SolutionDir)3rd party\OpenCL\Calc\inc;$(SolutionDir)3rd party\OpenCL\CLW</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USE_MATH_DEFINES;WIN32;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -372,7 +372,8 @@
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <ImportLibrary>$(SolutionDir)_Lib\$(Configuration)\$(ProjectName).lib</ImportLibrary>
       <TargetMachine>NotSet</TargetMachine>
-      <AdditionalLibraryDirectories>$(SolutionDir)_Lib\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)_Lib\$(Configuration);$(SolutionDir)_Lib\$(Configuration)\$(Platform)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>OpenCL.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_w_STLPORT|Win32'">
@@ -392,7 +393,7 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\xrQSlim\src;..\xrCore;$(SolutionDir)3rd party\FreeImage\FreeImage\;$(SolutionDir)3rd party\MagicSoftware\FreeMagic\Include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\xrQSlim\src;..\xrCore;$(SolutionDir)3rd party\FreeImage\FreeImage\;$(SolutionDir)3rd party\MagicSoftware\FreeMagic\Include\;$(SolutionDir)3rd party\FireRays_SDK\FireRays\include\;$(SolutionDir)3rd party\OpenCL;$(SolutionDir)3rd party\OpenCL\Calc\inc;$(SolutionDir)3rd party\OpenCL\CLW</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USE_MATH_DEFINES;WIN32;_WINDOWS;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>
@@ -436,7 +437,8 @@
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <ImportLibrary>$(SolutionDir)_Lib\$(Configuration)\$(ProjectName).lib</ImportLibrary>
       <TargetMachine>NotSet</TargetMachine>
-      <AdditionalLibraryDirectories>$(SolutionDir)_Lib\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)_Lib\$(Configuration);$(SolutionDir)_Lib\$(Configuration)\$(Platform)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>OpenCL.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -455,7 +457,7 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\xrQSlim\src;..\xrCore;$(SolutionDir)3rd party\FreeImage\FreeImage\;$(SolutionDir)3rd party\MagicSoftware\FreeMagic\Include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\xrQSlim\src;..\xrCore;$(SolutionDir)3rd party\FreeImage\FreeImage\;$(SolutionDir)3rd party\MagicSoftware\FreeMagic\Include\;$(SolutionDir)3rd party\FireRays_SDK\FireRays\include\;$(SolutionDir)3rd party\OpenCL;$(SolutionDir)3rd party\OpenCL\Calc\inc;$(SolutionDir)3rd party\OpenCL\CLW</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USE_MATH_DEFINES;_AMD64_;_WIN64;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -496,8 +498,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <ImportLibrary>$(SolutionDir)_Lib\$(Configuration)\$(ProjectName).lib</ImportLibrary>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)_Lib\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>OpenCL.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)_Lib\$(Configuration);$(SolutionDir)_Lib\$(Configuration)\$(Platform)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_w_STLPORT|x64'">
@@ -516,7 +518,7 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\xrQSlim\src;..\xrCore;$(SolutionDir)3rd party\FreeImage\FreeImage\;$(SolutionDir)3rd party\MagicSoftware\FreeMagic\Include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\xrQSlim\src;..\xrCore;$(SolutionDir)3rd party\FreeImage\FreeImage\;$(SolutionDir)3rd party\MagicSoftware\FreeMagic\Include\;$(SolutionDir)3rd party\FireRays_SDK\FireRays\include\;$(SolutionDir)3rd party\OpenCL;$(SolutionDir)3rd party\OpenCL\Calc\inc;$(SolutionDir)3rd party\OpenCL\CLW</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USE_MATH_DEFINES;WIN32;_WINDOWS;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>
@@ -559,7 +561,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <ImportLibrary>$(SolutionDir)_Lib\$(Configuration)\$(ProjectName).lib</ImportLibrary>
-      <AdditionalLibraryDirectories>$(SolutionDir)_Lib\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)_Lib\$(Configuration);$(SolutionDir)_Lib\$(Configuration)\$(Platform)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>OpenCL.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -572,7 +575,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\xrQSlim\src;..\xrCore;$(SolutionDir)3rd party\FreeImage\FreeImage\;$(SolutionDir)3rd party\MagicSoftware\FreeMagic\Include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\xrQSlim\src;..\xrCore;$(SolutionDir)3rd party\FreeImage\FreeImage\;$(SolutionDir)3rd party\MagicSoftware\FreeMagic\Include\;$(SolutionDir)3rd party\FireRays_SDK\FireRays\include\;$(SolutionDir)3rd party\OpenCL;$(SolutionDir)3rd party\OpenCL\Calc\inc;$(SolutionDir)3rd party\OpenCL\CLW</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USE_MATH_DEFINES;WIN32;DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -606,9 +609,10 @@
       <LargeAddressAware>true</LargeAddressAware>
       <ImportLibrary>$(SolutionDir)_Lib\$(Configuration)\$(ProjectName).lib</ImportLibrary>
       <TargetMachine>NotSet</TargetMachine>
-      <AdditionalLibraryDirectories>$(SolutionDir)_Lib\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)_Lib\$(Configuration);$(SolutionDir)_Lib\$(Configuration)\$(Platform)</AdditionalLibraryDirectories>
       <Profile>true</Profile>
       <ShowProgress>NotSet</ShowProgress>
+      <AdditionalDependencies>OpenCL.lib;clwd.lib;calcd.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -620,7 +624,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\xrQSlim\src;..\xrCore;$(SolutionDir)3rd party\FreeImage\FreeImage\;$(SolutionDir)3rd party\MagicSoftware\FreeMagic\Include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\xrQSlim\src;..\xrCore;$(SolutionDir)3rd party\FreeImage\FreeImage\;$(SolutionDir)3rd party\MagicSoftware\FreeMagic\Include\;$(SolutionDir)3rd party\FireRays_SDK\FireRays\include\;$(SolutionDir)3rd party\OpenCL;$(SolutionDir)3rd party\OpenCL\Calc\inc;$(SolutionDir)3rd party\OpenCL\CLW</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USE_MATH_DEFINES;_AMD64_;_WIN64;DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -652,9 +656,10 @@
       <SubSystem>Windows</SubSystem>
       <LargeAddressAware>true</LargeAddressAware>
       <ImportLibrary>$(SolutionDir)_Lib\$(Configuration)\$(ProjectName).lib</ImportLibrary>
-      <AdditionalLibraryDirectories>$(SolutionDir)_Lib\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)_Lib\$(Configuration);$(SolutionDir)_Lib\$(Configuration)\$(Platform)</AdditionalLibraryDirectories>
       <Profile>true</Profile>
       <ShowProgress>NotSet</ShowProgress>
+      <AdditionalDependencies>OpenCL.lib;clw64d.lib;calc64d.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">
@@ -673,7 +678,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>false</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
-      <AdditionalIncludeDirectories>..\xrQSlim\src;..\xrCore;$(SolutionDir)3rd party\FreeImage\FreeImage\;$(SolutionDir)3rd party\MagicSoftware\FreeMagic\Include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\xrQSlim\src;..\xrCore;$(SolutionDir)3rd party\FreeImage\FreeImage\;$(SolutionDir)3rd party\MagicSoftware\FreeMagic\Include\;$(SolutionDir)3rd party\FireRays_SDK\FireRays\include\;$(SolutionDir)3rd party\OpenCL;$(SolutionDir)3rd party\OpenCL\Calc\inc;$(SolutionDir)3rd party\OpenCL\CLW</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USE_MATH_DEFINES;WIN32;DEBUG;_WINDOWS;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -711,7 +716,8 @@
       </TerminalServerAware>
       <ImportLibrary>$(SolutionDir)_Lib\$(Configuration)\$(ProjectName).lib</ImportLibrary>
       <TargetMachine>NotSet</TargetMachine>
-      <AdditionalLibraryDirectories>$(SolutionDir)_Lib\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)_Lib\$(Configuration);$(SolutionDir)_Lib\$(Configuration)\$(Platform)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>OpenCL.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">
@@ -729,7 +735,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>false</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
-      <AdditionalIncludeDirectories>..\xrQSlim\src;..\xrCore;$(SolutionDir)3rd party\FreeImage\FreeImage\;$(SolutionDir)3rd party\MagicSoftware\FreeMagic\Include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\xrQSlim\src;..\xrCore;$(SolutionDir)3rd party\FreeImage\FreeImage\;$(SolutionDir)3rd party\MagicSoftware\FreeMagic\Include\;$(SolutionDir)3rd party\FireRays_SDK\FireRays\include\;$(SolutionDir)3rd party\OpenCL;$(SolutionDir)3rd party\OpenCL\Calc\inc;$(SolutionDir)3rd party\OpenCL\CLW</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USE_MATH_DEFINES;WIN32;DEBUG;_WINDOWS;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -766,7 +772,8 @@
       <TerminalServerAware>
       </TerminalServerAware>
       <ImportLibrary>$(SolutionDir)_Lib\$(Configuration)\$(ProjectName).lib</ImportLibrary>
-      <AdditionalLibraryDirectories>$(SolutionDir)_Lib\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)_Lib\$(Configuration);$(SolutionDir)_Lib\$(Configuration)\$(Platform)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>OpenCL.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Mixed_Priquel|Win32'">
@@ -780,7 +787,7 @@
     <ClCompile>
       <AdditionalOptions>/Gs  %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\xrQSlim\src;..\xrCore;$(SolutionDir)3rd party\FreeImage\FreeImage\;$(SolutionDir)3rd party\MagicSoftware\FreeMagic\Include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\xrQSlim\src;..\xrCore;$(SolutionDir)3rd party\FreeImage\FreeImage\;$(SolutionDir)3rd party\MagicSoftware\FreeMagic\Include\;$(SolutionDir)3rd party\FireRays_SDK\FireRays\include\;$(SolutionDir)3rd party\OpenCL;$(SolutionDir)3rd party\OpenCL\Calc\inc;$(SolutionDir)3rd party\OpenCL\CLW</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USE_MATH_DEFINES;WIN32;DEBUG;_WINDOWS;_SECURE_SCL=0;PRIQUEL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -818,7 +825,8 @@
       </TerminalServerAware>
       <ImportLibrary>$(SolutionDir)_Lib\$(Configuration)\$(ProjectName).lib</ImportLibrary>
       <TargetMachine>NotSet</TargetMachine>
-      <AdditionalLibraryDirectories>$(SolutionDir)_Lib\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)_Lib\$(Configuration);$(SolutionDir)_Lib\$(Configuration)\$(Platform)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>OpenCL.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Mixed_Priquel|x64'">
@@ -831,7 +839,7 @@
     <ClCompile>
       <AdditionalOptions>/Gs  %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\xrQSlim\src;..\xrCore;$(SolutionDir)3rd party\FreeImage\FreeImage\;$(SolutionDir)3rd party\MagicSoftware\FreeMagic\Include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\xrQSlim\src;..\xrCore;$(SolutionDir)3rd party\FreeImage\FreeImage\;$(SolutionDir)3rd party\MagicSoftware\FreeMagic\Include\;$(SolutionDir)3rd party\FireRays_SDK\FireRays\include\;$(SolutionDir)3rd party\OpenCL;$(SolutionDir)3rd party\OpenCL\Calc\inc;$(SolutionDir)3rd party\OpenCL\CLW</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USE_MATH_DEFINES;WIN32;DEBUG;_WINDOWS;_SECURE_SCL=0;PRIQUEL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -868,7 +876,8 @@
       <TerminalServerAware>
       </TerminalServerAware>
       <ImportLibrary>$(SolutionDir)_Lib\$(Configuration)\$(ProjectName).lib</ImportLibrary>
-      <AdditionalLibraryDirectories>$(SolutionDir)_Lib\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)_Lib\$(Configuration);$(SolutionDir)_Lib\$(Configuration)\$(Platform)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>OpenCL.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Priquel|Win32'">
@@ -881,7 +890,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\xrQSlim\src;..\xrCore;$(SolutionDir)3rd party\FreeImage\FreeImage\;$(SolutionDir)3rd party\MagicSoftware\FreeMagic\Include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\xrQSlim\src;..\xrCore;$(SolutionDir)3rd party\FreeImage\FreeImage\;$(SolutionDir)3rd party\MagicSoftware\FreeMagic\Include\;$(SolutionDir)3rd party\FireRays_SDK\FireRays\include\;$(SolutionDir)3rd party\OpenCL;$(SolutionDir)3rd party\OpenCL\Calc\inc;$(SolutionDir)3rd party\OpenCL\CLW</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USE_MATH_DEFINES;WIN32;DEBUG;_WINDOWS;_SECURE_SCL=0;PRIQUEL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -915,8 +924,9 @@
       <LargeAddressAware>true</LargeAddressAware>
       <ImportLibrary>$(SolutionDir)_Lib\$(Configuration)\$(ProjectName).lib</ImportLibrary>
       <TargetMachine>NotSet</TargetMachine>
-      <AdditionalLibraryDirectories>$(SolutionDir)_Lib\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)_Lib\$(Configuration);$(SolutionDir)_Lib\$(Configuration)\$(Platform)</AdditionalLibraryDirectories>
       <ShowProgress>NotSet</ShowProgress>
+      <AdditionalDependencies>OpenCL.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Priquel|x64'">
@@ -928,7 +938,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\xrQSlim\src;..\xrCore;$(SolutionDir)3rd party\FreeImage\FreeImage\;$(SolutionDir)3rd party\MagicSoftware\FreeMagic\Include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\xrQSlim\src;..\xrCore;$(SolutionDir)3rd party\FreeImage\FreeImage\;$(SolutionDir)3rd party\MagicSoftware\FreeMagic\Include\;$(SolutionDir)3rd party\FireRays_SDK\FireRays\include\;$(SolutionDir)3rd party\OpenCL;$(SolutionDir)3rd party\OpenCL\Calc\inc;$(SolutionDir)3rd party\OpenCL\CLW</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USE_MATH_DEFINES;WIN32;DEBUG;_WINDOWS;_SECURE_SCL=0;PRIQUEL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -961,8 +971,9 @@
       <SubSystem>Windows</SubSystem>
       <LargeAddressAware>true</LargeAddressAware>
       <ImportLibrary>$(SolutionDir)_Lib\$(Configuration)\$(ProjectName).lib</ImportLibrary>
-      <AdditionalLibraryDirectories>$(SolutionDir)_Lib\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)_Lib\$(Configuration);$(SolutionDir)_Lib\$(Configuration)\$(Platform)</AdditionalLibraryDirectories>
       <ShowProgress>NotSet</ShowProgress>
+      <AdditionalDependencies>OpenCL.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Priquel|Win32'">
@@ -982,7 +993,7 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\xrQSlim\src;..\xrCore;$(SolutionDir)3rd party\FreeImage\FreeImage\;$(SolutionDir)3rd party\MagicSoftware\FreeMagic\Include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\xrQSlim\src;..\xrCore;$(SolutionDir)3rd party\FreeImage\FreeImage\;$(SolutionDir)3rd party\MagicSoftware\FreeMagic\Include\;$(SolutionDir)3rd party\FireRays_SDK\FireRays\include\;$(SolutionDir)3rd party\OpenCL;$(SolutionDir)3rd party\OpenCL\Calc\inc;$(SolutionDir)3rd party\OpenCL\CLW</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USE_MATH_DEFINES;WIN32;_WINDOWS;_SECURE_SCL=0;PRIQUEL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>
@@ -1026,7 +1037,8 @@
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <ImportLibrary>$(SolutionDir)_Lib\$(Configuration)\$(ProjectName).lib</ImportLibrary>
       <TargetMachine>NotSet</TargetMachine>
-      <AdditionalLibraryDirectories>$(SolutionDir)_Lib\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)_Lib\$(Configuration);$(SolutionDir)_Lib\$(Configuration)\$(Platform)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>OpenCL.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Priquel|x64'">
@@ -1045,7 +1057,7 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\xrQSlim\src;..\xrCore;$(SolutionDir)3rd party\FreeImage\FreeImage\;$(SolutionDir)3rd party\MagicSoftware\FreeMagic\Include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\xrQSlim\src;..\xrCore;$(SolutionDir)3rd party\FreeImage\FreeImage\;$(SolutionDir)3rd party\MagicSoftware\FreeMagic\Include\;$(SolutionDir)3rd party\FireRays_SDK\FireRays\include\;$(SolutionDir)3rd party\OpenCL;$(SolutionDir)3rd party\OpenCL\Calc\inc;$(SolutionDir)3rd party\OpenCL\CLW</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USE_MATH_DEFINES;WIN32;_WINDOWS;_SECURE_SCL=0;PRIQUEL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>
@@ -1088,11 +1100,17 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <ImportLibrary>$(SolutionDir)_Lib\$(Configuration)\$(ProjectName).lib</ImportLibrary>
-      <AdditionalLibraryDirectories>$(SolutionDir)_Lib\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)_Lib\$(Configuration);$(SolutionDir)_Lib\$(Configuration)\$(Platform)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>OpenCL.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ArbitraryList.h" />
+    <ClInclude Include="LightingCL\BVHBuilder.h" />
+    <ClInclude Include="LightingCL\PlainBVHTranslator.h" />
+    <ClInclude Include="LightingCL\ILightingCLApi.h" />
+    <ClInclude Include="LightingCL\LightingCLApi.h" />
+    <ClInclude Include="LightingCL\BVHIntersector.h" />
     <ClInclude Include="PropSlimTools.h" />
     <ClInclude Include="_d3d_extensions.h" />
     <ClInclude Include="defines.h" />
@@ -1146,6 +1164,7 @@
     <ClInclude Include="xrGameMaterials.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Build_LightingCL.cpp" />
     <ClCompile Include="fmesh.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Mixed_Priquel|Win32'">true</ExcludedFromBuild>
@@ -1162,6 +1181,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Priquel|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="LightingCL\BVHBuilder.cpp" />
+    <ClCompile Include="LightingCL\PlainBVHTranslator.cpp" />
+    <ClCompile Include="LightingCL\LightingCLApi.cpp" />
+    <ClCompile Include="LightingCL\BVHIntersector.cpp" />
     <ClCompile Include="StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Priquel|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Priquel|x64'">Create</PrecompiledHeader>

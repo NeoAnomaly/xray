@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="inc">
+      <UniqueIdentifier>{1F80880B-8B89-887C-1405-9F7C800D947C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="inc\buffer.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\calc.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\calc_cl.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\calc_common.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\device.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\device_cl.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\event.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\except.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\executable.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\primitives.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\calc_clw.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\calc_clw_common.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\device_clw.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\except_clw.h">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\calc.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\calc_clw.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\device_clw.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

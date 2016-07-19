@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="CL">
+      <UniqueIdentifier>{34735900-20FF-870B-89AD-880B7558880B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CL\cache">
+      <UniqueIdentifier>{57DD10A0-43AA-6BAB-6CC3-595358EFA039}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CL\cache\kernels.h">
+      <Filter>CL\cache</Filter>
+    </ClInclude>
+    <ClInclude Include="CLW.h" />
+    <ClInclude Include="CLWBuffer.h" />
+    <ClInclude Include="CLWCommandQueue.h" />
+    <ClInclude Include="CLWContext.h" />
+    <ClInclude Include="CLWDevice.h" />
+    <ClInclude Include="CLWEvent.h" />
+    <ClInclude Include="CLWExcept.h" />
+    <ClInclude Include="CLWImage2D.h" />
+    <ClInclude Include="CLWKernel.h" />
+    <ClInclude Include="CLWParallelPrimitives.h" />
+    <ClInclude Include="CLWPlatform.h" />
+    <ClInclude Include="CLWProgram.h" />
+    <ClInclude Include="ParameterHolder.h" />
+    <ClInclude Include="ReferenceCounter.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CLWCommandQueue.cpp" />
+    <ClCompile Include="CLWContext.cpp" />
+    <ClCompile Include="CLWDevice.cpp" />
+    <ClCompile Include="CLWEvent.cpp" />
+    <ClCompile Include="CLWImage2D.cpp" />
+    <ClCompile Include="CLWKernel.cpp" />
+    <ClCompile Include="CLWParallelPrimitives.cpp" />
+    <ClCompile Include="CLWPlatform.cpp" />
+    <ClCompile Include="CLWProgram.cpp" />
+    <ClCompile Include="ParameterHolder.cpp" />
+    <ClCompile Include="ReferenceCounter.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CL\CLW.cl">
+      <Filter>CL</Filter>
+    </None>
+  </ItemGroup>
+</Project>
