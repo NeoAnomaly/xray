@@ -3,13 +3,15 @@
 #define LCL_EMBED_KERNELS 0
 
 /// forward decl
-namespace CDB
-{
-	class CollectorPacked;
-}
-
-struct b_material;
+//namespace CDB
+//{
+//	class CollectorPacked;
+//}
+//
+//struct b_material;
 struct b_BuildTexture;
+//class base_color;
+//class base_lighting;
 
 namespace LightingCL
 {
@@ -79,10 +81,11 @@ namespace LightingCL
 		///
 		/// Collision model management
 		///
+		virtual void LoadTextures(xr_vector<struct b_BuildTexture>& Textures) = 0;
+
 		virtual void BuildCollisionModel(
 			CDB::CollectorPacked& Collector, 
-			xr_vector<struct b_material>& Materials, 
-			xr_vector<struct b_BuildTexture>& Textures
+			xr_vector<struct b_material>& Materials
 		) = 0;
 
 		///
@@ -109,7 +112,27 @@ namespace LightingCL
 		///
 		/// Lighting
 		///
-		virtual void LightingPoints(Buffer* Colors, Buffer* Points, Buffer* Lights, u32 Flags) = 0;
+		virtual void LightingPoints(
+			Buffer* Colors, 
+			Buffer* Points, 
+			Buffer* RgbLights,
+			Buffer* SunLights,
+			Buffer* HemiLights,
+			u64 NumPoints,
+			u32 NumRgbLights,
+			u32 NumSunLights,
+			u32 NumHemiLights,
+			u32 Samples
+		) = 0;
+
+		virtual void LightingPoints(
+			base_color_c* Colors, 
+			Point* Points, 
+			base_lighting& Lights, 
+			u64 NumPoints,
+			u32 Flags, 
+			u32 Samples = 1
+		) = 0;
 	protected:
 		ILightingCLApi() {};
 		ILightingCLApi(ILightingCLApi const&);

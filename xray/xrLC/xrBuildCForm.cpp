@@ -174,7 +174,7 @@ void CBuild::BuildCForm	()
 		MFS->w_u32(tri->dummy_low);
 	}
 #else
-	MFS->w			(CL.getT(),(u32)CL.getTS()*sizeof(CDB::TRI));
+	MFS->w			(CL.getT(),(u32)(CL.getTS()*sizeof(CDB::TRI)));
 #endif
 
 	// Clear pDeflector (it is stored in the same memory space with dwMaterialGame)

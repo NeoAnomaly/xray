@@ -79,7 +79,6 @@ void*	xrMemory::mem_alloc		(size_t size
 		// generic
 		//	Igor: Reserve 1 byte for xrMemory header
 		void*	_real			=	xr_aligned_offset_malloc	(1 + size + _footer, 16, 0x1);
-		//void*	_real			=	xr_aligned_offset_malloc	(size + _footer, 16, 0x1);
 		_ptr					=	(void*)(((u8*)_real)+1);
 		*acc_header(_ptr)		=	mem_generic;
 	} else {

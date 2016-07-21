@@ -2,6 +2,7 @@
 
 #include "xrPool.h"
 #include "cl_collector.h"
+#include "LightingCL\ILightingCLApi.h"
 
 class xrMU_Model
 {
@@ -100,6 +101,7 @@ public:
 	void					calc_lighting		(xr_vector<base_color>& dest, Fmatrix& xform, CDB::MODEL* M, base_lighting& lights, u32 flags);
 	void					calc_lighting		();
 	void calc_lighting_cl();
+	void calc_lighting_cl(xr_vector<base_color>& dest, Fmatrix& xform, LightingCL::ILightingCLApi* Api, base_lighting& lights, u32 flags);
 	void					calc_ogf			();
 	void					export_geometry		();
 	void					export_cform_rcast	(CDB::CollectorPacked& CL, Fmatrix& xform);

@@ -31,14 +31,18 @@ void	Surface_FormatExt(FREE_IMAGE_FORMAT f)
 		LPSTR base = xr_strdup(n);
 		LPSTR ext = base;
 		LPSTR cur = ext;
-		for (; ext[0]; ext++) {
-			if (ext[0] == ',') {
+		for (; ext[0]; ext++) 
+		{
+			if (ext[0] == ',') 
+			{
 				ext[0] = 0;
 				formats.format_register(cur);
 				cur = ++ext;
 			}
 		}
-		if (cur&&cur[0]) formats.format_register(cur);
+		if (cur&&cur[0]) 
+			formats.format_register(cur);
+
 		xr_free(base);
 	}
 }

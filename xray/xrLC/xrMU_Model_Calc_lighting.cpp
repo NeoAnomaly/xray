@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "fitter.h"
 
 union var
@@ -216,6 +217,279 @@ void xrMU_Model::calc_lighting	()
 	clMsg					("model '%s' - REF_lighted.",*m_name);
 }
 
+void xrMU_Model::calc_lighting_cl(xr_vector<base_color>& dest, Fmatrix& xform, LightingCL::ILightingCLApi* Api, base_lighting& lights, u32 flags)
+{
+#if (ERT_DUMP_DEBUG_DATA == 1)
+	//bool bDumpDebugData = !xr_strcmp(m_name, "levels\\radar_1511\\radar_1511_lod0000");
+	bool bDumpDebugData = true;
+#endif
+	// trans-map
+	typedef	xr_multimap<float, v_vertices>	mapVert;
+	typedef	mapVert::iterator				mapVertIt;
+	mapVert									g_trans;
+
+	// trans-epsilons
+	const float eps = EPS_L;
+	const float eps2 = 2.f*eps;
+
+	// calc pure rotation matrix
+	Fmatrix Rxform, tmp, R;
+	R.set(xform);
+	R.translate_over(0, 0, 0);
+	tmp.transpose(R);
+	Rxform.invert(tmp);
+
+#if (ERT_DISABLE_MULTI_SAMPLING == 1)
+	const u32 n_samples = 1;
+#else
+	const u32 n_samples = (g_params.m_quality == ebqDraft) ? 1 : 6;
+#endif
+
+	///
+	/// Prepare for lighting
+	///
+
+	struct
+	{
+
+		xr_vector<LightingCL::Point> Points;
+		xr_vector<base_color_c> Colors;
+
+		/// array of Fvector2(x: ambient, y: transluency) factors for vertex
+		Fvector2Vec Factors;
+
+	} lightingData;
+
+	size_t numVertices = m_vertices.size();
+
+	/// collect data
+	{
+		lightingData.Points.resize(numVertices);
+		lightingData.Factors.resize(numVertices);
+		lightingData.Colors.resize(numVertices);
+
+		for (u32 i = 0; i < numVertices; i++)
+		{
+			_vertex* vertex = m_vertices[i];
+
+			// Get ambient factor
+			Fvector2& factor = lightingData.Factors[i];
+			factor.set(0.f, 0.f);
+
+			for (u32 f = 0; f < vertex->adjacent.size(); f++)
+			{
+				_face*	face = vertex->adjacent[f];
+
+				factor.x += face->Shader().vert_ambient;
+				factor.y += face->Shader().vert_translucency;
+			}
+
+			factor.x /= float(vertex->adjacent.size());
+			factor.y /= float(vertex->adjacent.size());
+
+			xform.transform_tiny(lightingData.Points[i].Position, vertex->P);
+			Rxform.transform_dir(lightingData.Points[i].Normal, vertex->N);
+			exact_normalize(lightingData.Points[i].Normal);
+
+			// Search
+			const float key = vertex->P.x;
+			mapVertIt it = g_trans.lower_bound(key);
+			mapVertIt it2 = it;
+
+			// Decrement to the start and inc to end
+			while (it != g_trans.begin() && ((it->first + eps2) > key))
+				it--;
+
+			while (it2 != g_trans.end() && ((it2->first - eps2) < key))
+				it2++;
+
+			if (it2 != g_trans.end())
+				it2++;
+
+			// Search
+			bool found = false;
+			for (; it != it2; it++)
+			{
+				v_vertices&	vertices = it->second;
+
+				_vertex* Front = vertices.front();
+				R_ASSERT(Front);
+
+				if (Front->P.similar(vertex->P, eps))
+				{
+					found = true;
+					vertices.push_back(vertex);
+				}
+			}
+
+			// Register
+			if (!found)
+			{
+				mapVertIt ins = g_trans.insert(mk_pair(key, v_vertices()));
+				ins->second.reserve(32);
+				ins->second.push_back(vertex);
+			}
+		}
+	}
+
+
+	/// perform multisampled lighting
+
+	Api->LightingPoints(
+		&lightingData.Colors[0],
+		&lightingData.Points[0],
+		lights,
+		numVertices,
+		flags,
+		n_samples
+	);
+
+//	for (u32 i = 0; i < m_vertices.size(); i++)
+//	{
+//		_vertex* vertex = m_vertices[i];
+//
+//		// Get ambient factor
+//		float v_amb = 0.f;
+//		float v_trans = 0.f;
+//
+//		for (u32 f = 0; f < vertex->adjacent.size(); f++)
+//		{
+//			_face*	face = vertex->adjacent[f];
+//			v_amb += face->Shader().vert_ambient;
+//			v_trans += face->Shader().vert_translucency;
+//		}
+//
+//		v_amb /= float(vertex->adjacent.size());
+//		v_trans /= float(vertex->adjacent.size());
+//
+//		base_color_c			vC;
+//		Fvector					vP, vN;
+//		xform.transform_tiny(vP, vertex->P);
+//		Rxform.transform_dir(vN, vertex->N);
+//		exact_normalize(vN);
+//
+//		// multi-sample
+//#if (ERT_DISABLE_MULTI_SAMPLING == 1)
+//		const u32 n_samples = 1;
+//#else
+//		const u32 n_samples = (g_params.m_quality == ebqDraft) ? 1 : 6;
+//#endif
+//		for (u32 sample = 0; sample<(u32)n_samples; sample++)
+//		{
+//			float				a = 0.2f * float(sample) / float(n_samples);
+//			Fvector				P, N;
+//#if (ERT_DISABLE_MULTI_SAMPLING == 1)
+//			N.set(vN);
+//#else
+//			N.random_dir(vN, deg2rad(30.f));
+//#endif
+//			P.mad(vP, N, a);
+//
+//			LightPoint(&DB, MDL, vC, P, N, lights, flags, 0);
+//
+//#if (ERT_DUMP_DEBUG_DATA == 1)
+//			if (bDumpDebugData)
+//			{
+//				Msg(
+//					"LightPoint - C(rgb(%f, %f, %f), hemi(%f), sun(%f), tmp(%f)), P(%f, %f, %f), N(%f, %f, %f)",
+//					vC.rgb.x, vC.rgb.y, vC.rgb.z,
+//					vC.hemi, vC.sun, vC._tmp_,
+//
+//					P.x, P.y, P.z,
+//
+//					N.x, N.y, N.z
+//				);
+//			}
+//#endif
+//		}
+//		vC.scale(n_samples);
+//		vC._tmp_ = v_trans;
+//		if (flags&LP_dont_hemi)
+//		{
+//
+//		}
+//		else
+//			vC.hemi += v_amb;
+//
+//		vertex->C._set(vC);
+//
+//		// Search
+//		const float key = vertex->P.x;
+//		mapVertIt	it = g_trans.lower_bound(key);
+//		mapVertIt	it2 = it;
+//
+//		// Decrement to the start and inc to end
+//		while (it != g_trans.begin() && ((it->first + eps2)>key)) it--;
+//		while (it2 != g_trans.end() && ((it2->first - eps2)<key)) it2++;
+//		if (it2 != g_trans.end())	it2++;
+//
+//		// Search
+//		BOOL	found = FALSE;
+//		for (; it != it2; it++)
+//		{
+//			v_vertices&	VL = it->second;
+//			_vertex* Front = VL.front();
+//			R_ASSERT(Front);
+//			if (Front->P.similar(vertex->P, eps))
+//			{
+//				found = TRUE;
+//				VL.push_back(vertex);
+//			}
+//		}
+//
+//		// Register
+//		if (!found) 
+//		{
+//			mapVertIt	ins = g_trans.insert(mk_pair(key, v_vertices()));
+//			ins->second.reserve(32);
+//			ins->second.push_back(vertex);
+//		}
+//	}
+//
+//	// Process all groups
+//	for (mapVertIt it = g_trans.begin(); it != g_trans.end(); it++)
+//	{
+//		// Unique
+//		v_vertices&	VL = it->second;
+//		std::sort(VL.begin(), VL.end());
+//		VL.erase(std::unique(VL.begin(), VL.end()), VL.end());
+//
+//		// Calc summary color
+//		base_color_c	C;
+//		for (int v = 0; v<int(VL.size()); v++)
+//		{
+//			base_color_c	vC;
+//			VL[v]->C._get(vC);
+//			C.max(vC);
+//		}
+//
+//		// Calculate final vertex color
+//		for (u32 v = 0; v<int(VL.size()); v++)
+//		{
+//			base_color_c		vC;
+//			VL[v]->C._get(vC);
+//
+//			// trans-level
+//			float	level = vC._tmp_;
+//
+//			// 
+//			base_color_c		R;
+//			R.lerp(vC, C, level);
+//			R.max(vC);
+//			R.mul(.5f);
+//			VL[v]->C._set(R);
+//		}
+//	}
+
+	// Transfer colors to destination
+	dest.resize(m_vertices.size());
+
+	for (u32 i = 0; i < m_vertices.size(); i++)
+	{
+		dest[i] = m_vertices[i]->C;
+	}
+}
+
 void xrMU_Model::calc_lighting_cl()
 {
 	// BB
@@ -234,11 +508,11 @@ void xrMU_Model::calc_lighting_cl()
 	
 	clMsg("...model '%s' - building collision", *m_name);
 
-	api->BuildCollisionModel(collector, pBuild->materials, pBuild->textures);
+	api->BuildCollisionModel(collector, pBuild->materials);
 
 	clMsg("...model '%s' - lighting CL", *m_name);
 
-	//calc_lighting(color, Fidentity, M, pBuild->L_static, LP_dont_rgb + LP_dont_sun);
+	calc_lighting_cl(color, Fidentity, api, pBuild->L_static, LP_dont_rgb + LP_dont_sun);
 
 	clMsg("model '%s' - REF_lighted.", *m_name);
 }

@@ -99,8 +99,54 @@ void CBuild::Light_prepare()
 		mu_models[m]->calc_faceopacity();
 }
 
+#include <map>
+#include <algorithm>
+
 void CBuild::RayTests(LPCSTR path)
 {
+	Phase("Dump texture info...");
+	{
+		struct _vector_comparer
+		{
+			IC	bool operator()(const Ivector2& v1, const Ivector2& v2) const
+			{
+				Ivector2 sub;
+				sub = v1;
+				sub.sub(v2);
+				return (sub.x + sub.y) < 0;
+			}
+		};
+
+		xr_map<Ivector2, std::pair<int, xr_string>, _vector_comparer> texDimsMap;
+
+		for each (auto tex in textures)
+		{
+			Ivector2 dims;
+
+			dims.set((int)tex.dwWidth, (int)tex.dwHeight);
+
+			texDimsMap[dims].first++;
+			texDimsMap[dims].second.append("\n\t").append(tex.name);
+		}
+
+		IWriter* writer = FS.w_open("$logs$", "textures.log");
+
+		writer->w_string("<width> x <height> - <count>\n<names>\n");
+
+		xr_string buff;
+		buff.resize(4096);
+
+		for each (auto dim in texDimsMap)
+		{
+			sprintf_s(&*buff.begin(), buff.size(), "%d x %d - %d%s", dim.first.x, dim.first.y, dim.second.first, dim.second.second.c_str());
+
+			writer->w_stringZ(buff.c_str());
+			writer->w_string("\n\n");
+		}
+
+		FS.w_close(writer);
+	}
+
 	Status("Start ray testing case");
 
 	Phase("Calculate normals...");
@@ -148,6 +194,7 @@ void CBuild::RayTests(LPCSTR path)
 			LightingCL::ILightingCLApi::Delete(m_LightingCLApi);
 
 			m_LightingCLApi = LightingCL::ILightingCLApi::Create(i);
+			m_LightingCLApi->LoadTextures(textures);
 		}
 
 		

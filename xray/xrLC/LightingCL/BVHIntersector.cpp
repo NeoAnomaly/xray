@@ -10,6 +10,8 @@
 
 #include "PlainBVHTranslator.h"
 
+static int const kWorkGroupSize = 64;
+
 namespace LightingCL
 {
 	struct BVHIntersector::GpuData
@@ -21,6 +23,10 @@ namespace LightingCL
 		Calc::Buffer* Vertices;
 		Calc::Buffer* Faces;
 
+		/// u64[i] = start offset of the i(mapped to face texture id) texture data in TexturesData buffer
+		Calc::Buffer* TexturesOffset;
+		Calc::Buffer* TexturesData;
+
 		Calc::Executable* Executable;
 		Calc::Function* LightingFunc;
 
@@ -29,6 +35,8 @@ namespace LightingCL
 			BvhNodes(nullptr),
 			Vertices(nullptr),
 			Faces(nullptr),
+			TexturesOffset(nullptr),
+			TexturesData(nullptr),
 
 			Executable(nullptr),
 			LightingFunc(nullptr)
@@ -46,6 +54,12 @@ namespace LightingCL
 			if (Faces)
 				Device->DeleteBuffer(Faces);
 
+			if (TexturesOffset)
+				Device->DeleteBuffer(TexturesOffset);
+
+			if (TexturesData)
+				Device->DeleteBuffer(TexturesData);
+
 			if (LightingFunc)
 				Executable->DeleteFunction(LightingFunc);
 
@@ -55,7 +69,8 @@ namespace LightingCL
 	};
 
 	BVHIntersector::BVHIntersector(Calc::Device* Device):
-		m_Device(Device)
+		m_Device(Device),
+		m_State(0)
 	{
 		m_GpuData = new GpuData(Device);
 		m_BvhBuilder = new BVHBuilder();
@@ -72,6 +87,8 @@ namespace LightingCL
 #endif
 
 		m_GpuData->LightingFunc = m_GpuData->Executable->CreateFunction("LightingPoints");
+
+		m_State |= sNone;
 	}
 
 	BVHIntersector::~BVHIntersector()
@@ -89,12 +106,87 @@ namespace LightingCL
 		}		
 	}
 
+	void BVHIntersector::LoadTextures(xr_vector<b_BuildTexture>& Textures, Event ** Event)
+	{
+		/*m_GpuData->Textures = m_Device->CreateBuffer(
+			Textures.size()
+		);*/
+		
+		size_t totalTexturesSize = 0;
+		size_t numTextures = Textures.size();
+		xr_vector<u64> textureOffsets(numTextures);
+
+		for (size_t i = 0; i < numTextures; i++)
+		{
+			b_BuildTexture& texture = Textures[i];
+			if (!texture.pSurface)
+			{
+				continue;
+			}
+
+			/// save data offsets
+			textureOffsets[i] = totalTexturesSize;
+
+			totalTexturesSize += Textures[i].dwWidth * Textures[i].dwHeight * 4;
+		}
+
+//#pragma message("Add code for checking next statement: totalTexturesSize < Avaiable GPU memory")
+
+		m_GpuData->TexturesOffset = m_Device->CreateBuffer(
+			numTextures * sizeof(u64),
+			Calc::BufferType::kRead,
+			&textureOffsets[0]
+		);
+
+		///
+		/// load textures data
+		///
+		Calc::Event* event = nullptr;
+		u32* surfaceData = nullptr;
+
+		m_GpuData->TexturesData = m_Device->CreateBuffer(totalTexturesSize, Calc::BufferType::kRead);
+		
+		m_Device->MapBuffer(
+			m_GpuData->TexturesData,
+			0,
+			0,
+			totalTexturesSize,
+			Calc::BufferType::kWrite,
+			(void**)&surfaceData,
+			&event
+		);
+
+		event->Wait();
+		m_Device->DeleteEvent(event);
+
+		for (size_t i = 0; i < numTextures; i++)
+		{
+			b_BuildTexture& texture = Textures[i];
+			if (!texture.pSurface)
+			{
+				continue;
+			}
+
+			RtlCopyMemory(surfaceData, texture.pSurface, texture.dwWidth * texture.dwHeight * 4);
+		}		
+
+		m_Device->UnmapBuffer(m_GpuData->TexturesData, 0, surfaceData, &event);
+
+		event->Wait();
+		m_Device->DeleteEvent(event);
+
+		m_Device->Finish(0);
+
+		m_State |= sTexturesLoaded;
+	}
+
 	void BVHIntersector::BuildModel(
 		CDB::CollectorPacked& Collector,
-		xr_vector<b_material>& Materials,
-		xr_vector<b_BuildTexture>& Textures
+		xr_vector<b_material>& Materials
 	)
 	{
+		R_ASSERT2((m_State & sTexturesLoaded), "Textures must be loaded before building collision model");
+
 		Fvector* vertices = Collector.getV();
 		CDB::TRI* faces = Collector.getT();
 		size_t numVertices = Collector.getVS();
@@ -142,9 +234,10 @@ namespace LightingCL
 			struct Face
 			{
 				u32 Idx[3];
-				u32 TextureId;
+				u32 TextureId;		/// mapped to m_GpuData->Texture
 				Fvector2 UV;
 				bool CastShadow;
+				bool Opaque;
 			};
 
 			m_GpuData->Faces = m_Device->CreateBuffer(
@@ -183,8 +276,9 @@ namespace LightingCL
 
 				Shader_xrLC& shader = face->Shader();
 
-				faceData[i].TextureId = Materials[faces[currentFaceIdx].material].surfidx;
 				faceData[i].CastShadow = shader.flags.bLIGHT_CastShadow;
+				faceData[i].Opaque = face->flags.bOpaque;
+				faceData[i].TextureId = Materials[face->dwMaterial].surfidx;
 				faceData[i].UV = *face->getTC0();
 			}
 
@@ -195,5 +289,49 @@ namespace LightingCL
 		}
 
 		m_Device->Finish(0);
+
+		m_State |= sCollisionModelLoaded;
+	}
+
+	void BVHIntersector::LightingPoints(
+		Calc::Buffer * Colors, 
+		Calc::Buffer * Points, 
+		Calc::Buffer * RgbLights, 
+		Calc::Buffer * SunLights, 
+		Calc::Buffer * HemiLights, 
+		u64 NumPoints, 
+		u32 NumRgbLights, 
+		u32 NumSunLights, 
+		u32 NumHemiLights, 
+		u32 Samples
+	)
+	{
+		R_ASSERT2((m_State & sReady), "Intersector doesn't ready yet");
+
+		auto& func = m_GpuData->LightingFunc;
+
+		// Set args
+		int arg = 0;
+
+		func->SetArg(arg++, m_GpuData->BvhNodes);
+		func->SetArg(arg++, m_GpuData->Vertices);
+		func->SetArg(arg++, m_GpuData->Faces);
+		func->SetArg(arg++, m_GpuData->TexturesOffset);
+		func->SetArg(arg++, m_GpuData->TexturesData);
+		func->SetArg(arg++, Colors);
+		func->SetArg(arg++, Points);
+		func->SetArg(arg++, RgbLights);
+		func->SetArg(arg++, SunLights);
+		func->SetArg(arg++, HemiLights);
+		func->SetArg(arg++, sizeof(NumPoints), &NumPoints);
+		func->SetArg(arg++, sizeof(NumRgbLights), &NumRgbLights);
+		func->SetArg(arg++, sizeof(NumSunLights), &NumSunLights);
+		func->SetArg(arg++, sizeof(NumHemiLights), &NumHemiLights);
+		func->SetArg(arg++, sizeof(Samples), &Samples);
+
+		size_t localsize = kWorkGroupSize;
+		size_t globalsize = ((NumPoints + kWorkGroupSize - 1) / kWorkGroupSize) * kWorkGroupSize;
+
+		m_Device->Execute(func, 0, globalsize, localsize, nullptr);
 	}
 }

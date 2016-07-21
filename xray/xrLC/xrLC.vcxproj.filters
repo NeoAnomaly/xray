@@ -55,6 +55,9 @@
     <Filter Include="LightingCL\Intersector">
       <UniqueIdentifier>{6da6f1e9-2987-4b92-b9ca-77de108a8d02}</UniqueIdentifier>
     </Filter>
+    <Filter Include="LightingCL\OpenCL">
+      <UniqueIdentifier>{9c8df28c-edcf-4f4a-b1ee-15a99a959082}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_d3d_extensions.h">
@@ -225,6 +228,12 @@
     </ClInclude>
     <ClInclude Include="LightingCL\PlainBVHTranslator.h">
       <Filter>LightingCL\Intersector</Filter>
+    </ClInclude>
+    <ClInclude Include="LightingCL\Image2DArray.h">
+      <Filter>LightingCL\OpenCL</Filter>
+    </ClInclude>
+    <ClInclude Include="LightingCL\BufferImpl.h">
+      <Filter>LightingCL</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -464,6 +473,9 @@
     </ClCompile>
     <ClCompile Include="LightingCL\PlainBVHTranslator.cpp">
       <Filter>LightingCL\Intersector</Filter>
+    </ClCompile>
+    <ClCompile Include="LightingCL\Image2DArray.cpp">
+      <Filter>LightingCL\OpenCL</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

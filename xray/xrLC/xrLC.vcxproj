@@ -1106,7 +1106,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ArbitraryList.h" />
+    <ClInclude Include="LightingCL\BufferImpl.h" />
     <ClInclude Include="LightingCL\BVHBuilder.h" />
+    <ClInclude Include="LightingCL\Image2DArray.h" />
     <ClInclude Include="LightingCL\PlainBVHTranslator.h" />
     <ClInclude Include="LightingCL\ILightingCLApi.h" />
     <ClInclude Include="LightingCL\LightingCLApi.h" />
@@ -1182,6 +1184,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="LightingCL\BVHBuilder.cpp" />
+    <ClCompile Include="LightingCL\Image2DArray.cpp" />
     <ClCompile Include="LightingCL\PlainBVHTranslator.cpp" />
     <ClCompile Include="LightingCL\LightingCLApi.cpp" />
     <ClCompile Include="LightingCL\BVHIntersector.cpp" />
