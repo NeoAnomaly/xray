@@ -44,7 +44,7 @@ typedef struct _Face
 {
 	uint Idx[3];
 	uint TextureId;	
-	float2 UV;
+	float2 UV[3];
 	bool CastShadow;
 	bool Opaque;
 } Face;
@@ -73,6 +73,15 @@ typedef struct _Light
 	float Energy;			// For radiosity ONLY
 } Light;
 
+typedef struct _Texture
+{
+	int Width;
+	int Height;
+	
+	// Offset in texture data array
+	ulong DataOffset;
+} Texture;
+
 typedef struct 
 {
 	__global const BvhNode* Nodes;				// BVH structure
@@ -80,8 +89,8 @@ typedef struct
 	__global const float3* Vertices;			// Scene positional data
 	__global const Face* Faces;
 
-	__global const ulong* TextureOffsets;		// Array of texture offsets in the TexturesData
-	__global const char* TexturesData;
+	__global const Texture* Textures;		// Array of textures desc
+	__global const char* TextureData;
 
 	__global const Light* Lights;
 	uint NumRgbLights;
@@ -133,6 +142,14 @@ float3 make_float3(float x, float y, float z)
     return res;
 }
 
+float2 make_float2(float x, float y)
+{
+    float2 res;
+    res.x = x;
+    res.y = y;
+    return res;
+}
+
 // Intersect ray with the axis-aligned box
 int IntersectBox(float3 RayOrigin, float3 InvDir, bbox Box, float MaxRange)
 {
@@ -149,7 +166,7 @@ int IntersectBox(float3 RayOrigin, float3 InvDir, bbox Box, float MaxRange)
 }
 
 // Intersect Ray against triangle
-int IntersectTriangle(const Ray* Ray, float3 V1, float3 V2, float3 V3, Intersection* Isect)
+bool IntersectTriangle(const Ray* Ray, float3 V1, float3 V2, float3 V3, float2* UV)
 {
     const float3 e1 = V2 - V1;
     const float3 e2 = V3 - V1;
@@ -175,42 +192,99 @@ int IntersectTriangle(const Ray* Ray, float3 V1, float3 V2, float3 V3, Intersect
 		temp > Ray->Range
 		)
     {
-        return 0;
+        return false;
     }
     else
     {
-        Isect->uvwt = make_float4(b1, b2, 0.f, temp);
-        return 1;
+        *UV = make_float2(b1, b2);
+
+        return true;
     }
 }
+
+
+float4 Texture_Sample2D(
+	float2 uv,
+	ulong TextureId,
+	__global const Texture* Textures,
+	__global const char* TextureData
+	)
+{
+// int U = iFloor(uv.x*float(T.dwWidth) + .5f);
+// int V = iFloor(uv.y*float(T.dwHeight)+ .5f);
+// U %= T.dwWidth;		if (U<0) U+=T.dwWidth;
+// V %= T.dwHeight;	if (V<0) V+=T.dwHeight;
+
+// u32 pixel		= T.pSurface[V*T.dwWidth+U];
+// u32 pixel_a		= color_get_A(pixel);
+
+
+	// Get width and height
+	int width = Textures[TextureId].Width;
+	int height = Textures[TextureId].Height;
+
+	// Find the origin of the data in the pool
+	__global const char* textureData = TextureData + Textures[TextureId].DataOffset;
+
+	// Calculate integer coordinates
+	int u = clamp((int)floor(uv.x * width), 0, width - 1);
+	int v = clamp((int)floor(uv.y * height), 0, height - 1);
+
+	// Get value
+	__global const uchar4* textureDataUC = (__global const uchar4*)textureData;
+	uchar4 value = *(textureDataUC + width * v + u); 
+	float4 result = make_float4(
+		(float)value.x / 255.f, 
+		(float)value.y / 255.f, 
+		(float)value.z / 255.f, 
+		(float)value.w / 255.f
+		);
+	return result;
+}
+
 /*************************************************************************
 BVH FUNCTIONS
 **************************************************************************/
 
 //  intersect a ray with leaf BVH node
-bool IntersectLeafClosest(
+float GetFaceOpacity(
     const SceneData* Scene,
     const BvhNode* Node,
-    const Ray* Ray,                // ray to instersect
-    Intersection* Isect          // Intersection structure
+    const Ray* Ray                // ray to instersect
     )
 {
-    float3 v1, v2, v3;
-    Face face;
-    long start = STARTIDX(Node);
-    face = Scene->Faces[start];
-    v1 = Scene->Vertices[face.Idx[0]];
-    v2 = Scene->Vertices[face.Idx[1]];
-    v3 = Scene->Vertices[face.Idx[2]];
+	float opacity = 1.f;
+	float2 isectUV;
+	float3 v1, v2, v3;
+	Face face;
+	long start = STARTIDX(Node);
+	face = Scene->Faces[start];
+	v1 = Scene->Vertices[face.Idx[0]];
+	v2 = Scene->Vertices[face.Idx[1]];
+	v3 = Scene->Vertices[face.Idx[2]];
 
-	if (IntersectTriangle(Ray, v1, v2, v3, Isect))
+	if (IntersectTriangle(Ray, v1, v2, v3, &isectUV))
 	{
-		Isect->FaceId = start;
+		if (!face.CastShadow)
+			return 1.f;
 
-		return true;
+		if (face.Opaque)
+			return 0.f;
+
+		// barycentric coords
+		// note: W,U,V order
+		float3 bc = make_float3(1.0f - isectUV.x - isectUV.y, isectUV.x, isectUV.y);
+
+		// calc UV
+		float2 uv;
+		uv.x = face.UV[0].x * bc.x + face.UV[1].x * bc.y + face.UV[2].x * bc.z;
+		uv.y = face.UV[0].y * bc.x + face.UV[1].y * bc.y + face.UV[2].y * bc.z;
+
+		float a = Texture_Sample2D(uv, face.TextureId, Scene->Textures, Scene->TextureData).w;
+		opacity = 1 - (a * a);
 	}
-     
-    return false;
+
+	return opacity;
 }
 
 float RayTrace(
@@ -221,7 +295,7 @@ float RayTrace(
     )
 {
 	float scale = 1.f;
-	const float3 invDir  = make_float3(1.f, 1.f, 1.f) / Direction.xyz;	
+	const float3 invDir = make_float3(1.f, 1.f, 1.f) / Direction.xyz;	
 	long idx = 0;
 	Ray ray =
 	{
@@ -240,13 +314,12 @@ float RayTrace(
 		{
 			if (LEAFNODE(node))
 			{
-				Intersection isect = 
-				{
-					make_float4(0.f, 0.f, 0.f, Range),
-					-1
-				};
+				/// perform intersection check and then calculate opacity value of the intersected face
+				scale *= GetFaceOpacity(Scene, &node, &ray);
 
-				IntersectLeafClosest(Scene, &node, &ray, &isect);
+				/// so, scale was too small, stop tracing
+				if (scale < FLT_EPSILON)
+					return scale;
 
 				idx = node.NetxtIdx;
 			}
@@ -492,8 +565,8 @@ __kernel void LightingPointsMS(
 __global const BvhNode* Nodes,				// BVH nodes
 __global const float3* Vertices,			// Scene positional data
 __global const Face* Faces,					// Scene indices
-__global const ulong* TextureOffsets,		// Array of texture offsets in the TexturesData
-__global const char* TexturesData,			// Plain texture surfaces sequence
+__global const Texture* Textures,			// Array of textures desc
+__global const char* TextureData,			// Plain texture surfaces sequence
 __global const Point* Points,				// Points that will be lighted
 __global const Light* Lights,
 ulong NumPoints,
@@ -541,8 +614,8 @@ __kernel void LightingPoints(
 __global const BvhNode* Nodes,				// BVH nodes
 __global const float3* Vertices,			// Scene positional data
 __global const Face* Faces,					// Scene indices
-__global const ulong* TextureOffsets,		// Array of texture offsets in the TexturesData
-__global const char* TexturesData,			// Plain texture surfaces sequence
+__global const Texture* Textures,			// Array of textures desc
+__global const char* TextureData,			// Plain texture surfaces sequence
 __global const Point* Points,				// Points that will be lighted
 __global const Light* Lights,
 ulong NumPoints,
@@ -562,8 +635,8 @@ __global Color* Colors
         Nodes,
         Vertices,
         Faces,
-		TextureOffsets,
-		TexturesData,
+		Textures,
+		TextureData,
 		Lights,
 		NumRgbLights,
 		NumSunLights,

@@ -173,42 +173,52 @@ void CBuild::RayTests(LPCSTR path)
 	{
 		pBuild->mu_models[m]->calc_lighting();
 
-		Progress(m / pBuild->mu_models.size());
+		Progress((float)m / (float)pBuild->mu_models.size());
 	}
 #endif
 
-	for (u32 i = 0; i < LightingCL::ILightingCLApi::GetDeviceCount(); ++i)
+
+	////////////////////////////////////////////////////////////////////////////////////////
+	// select first GPU device
+	u32 deviceIdx;
+
+	xr_string phaseName;
+	phaseName.resize(1024);
+
+	for (deviceIdx = 0; deviceIdx < LightingCL::ILightingCLApi::GetDeviceCount(); ++deviceIdx)
 	{
 		LightingCL::DeviceInfo deviceInfo;
-		LightingCL::ILightingCLApi::GetDeviceInfo(i, deviceInfo);
+		LightingCL::ILightingCLApi::GetDeviceInfo(deviceIdx, deviceInfo);
 
-		xr_string phaseName;
-		phaseName.resize(1024);
-
-		sprintf_s(&*phaseName.begin(), phaseName.size(), "LightingCL(on %s device)...", deviceInfo.name.c_str());
-
-		Phase(phaseName.c_str());
-
-		if (m_LightingCLApi)
+		if (deviceInfo.type == LightingCL::DeviceInfo::kGpu)
 		{
-			LightingCL::ILightingCLApi::Delete(m_LightingCLApi);
+			sprintf_s(&*phaseName.begin(), phaseName.size(), "LightingCL(on %s device)...", deviceInfo.name.c_str());
+			break;
+		}		
+	}
 
-			m_LightingCLApi = LightingCL::ILightingCLApi::Create(i);
-			m_LightingCLApi->LoadTextures(textures);
-			m_LightingCLApi->LoadLights(pBuild->L_static);
-		}
+	/// prepare lightingcl
+	if (m_LightingCLApi)
+	{
+		LightingCL::ILightingCLApi::Delete(m_LightingCLApi);
 
+		m_LightingCLApi = LightingCL::ILightingCLApi::Create(deviceIdx);
+		m_LightingCLApi->LoadTextures(textures);
+		m_LightingCLApi->LoadLights(pBuild->L_static);
+	}		
+
+	Phase(phaseName.c_str());
 		
+	/// perform lighting test
 #if (ERT_FIRST_MU_TEST_CASE == 1)
-		for (u32 m = 0; m < 1; m++)
+	for (u32 m = 0; m < 1; m++)
 #else
-		for (u32 m = 0; m < pBuild->mu_models.size(); m++)
+	for (u32 m = 0; m < pBuild->mu_models.size(); m++)
 #endif
-		{
-			pBuild->mu_models[m]->calc_lighting_cl(m_LightingCLApi);
+	{
+		pBuild->mu_models[m]->calc_lighting_cl(m_LightingCLApi);
 
-			Progress((float)m / (float)pBuild->mu_models.size());
-		}
+		Progress((float)m / (float)pBuild->mu_models.size());
 	}
 
 	Phase("Ray testing complete");

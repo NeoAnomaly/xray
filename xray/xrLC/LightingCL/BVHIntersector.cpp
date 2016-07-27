@@ -366,7 +366,7 @@ namespace LightingCL
 			{
 				u32 Idx[3];
 				u32 TextureId;		/// mapped to m_GpuData->Texture
-				float2 UV;
+				float2 UV[3];
 				bool CastShadow;
 				bool Opaque;
 			};
@@ -409,8 +409,14 @@ namespace LightingCL
 				faceData[i].CastShadow = shader.flags.bLIGHT_CastShadow;
 				faceData[i].Opaque = face->flags.bOpaque;
 				faceData[i].TextureId = Materials[face->dwMaterial].surfidx;
-				faceData[i].UV.x = face->getTC0()->x;
-				faceData[i].UV.y = face->getTC0()->y;
+				
+				Fvector2* tc = face->getTC0();
+				faceData[i].UV[0].x = tc[0].x;
+				faceData[i].UV[0].y = tc[0].y;
+				faceData[i].UV[1].x = tc[1].x;
+				faceData[i].UV[1].y = tc[1].y;
+				faceData[i].UV[2].x = tc[2].x;
+				faceData[i].UV[2].y = tc[2].y;
 			}
 
 			m_Device->UnmapBuffer(m_GpuData->Faces, 0, faceData, &event);
