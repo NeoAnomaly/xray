@@ -3,12 +3,13 @@
 #include "calc.h"
 #include "device.h"
 
-#include "..\xrFace.h"
 #include "..\Build.h"
 
 #include "LightingCLApi.h"
 
 #include "BufferImpl.h"
+#include "Math\float2.h"
+#include "Math\float3.h"
 
 namespace LightingCL
 {
@@ -75,6 +76,11 @@ namespace LightingCL
 		m_Intersector->LoadTextures(Textures, nullptr);
 	}
 
+	void LightingCLApi::LoadLights(base_lighting& Lights)
+	{
+		m_Intersector->LoadLights(Lights);
+	}
+
 	void LightingCLApi::BuildCollisionModel(CDB::CollectorPacked & Collector, xr_vector<b_material>& Materials)
 	{
 		m_Intersector->BuildModel(Collector, Materials);
@@ -119,23 +125,23 @@ namespace LightingCL
 	void LightingCLApi::LightingPoints(
 		Buffer* Colors,
 		Buffer* Points,
-		Buffer* RgbLights,
-		Buffer* SunLights,
-		Buffer* HemiLights,
 		u64 NumPoints,
-		u32 NumRgbLights,
-		u32 NumSunLights,
-		u32 NumHemiLights,
+		u32 Flags,
 		u32 Samples
 	)
 	{
-
+		m_Intersector->LightingPoints(
+			static_cast<BufferImpl*>(Colors)->GetData(),
+			static_cast<BufferImpl*>(Points)->GetData(),
+			NumPoints,
+			Flags,
+			Samples
+		);
 	}
 
 	void LightingCLApi::LightingPoints(
 		base_color_c* Colors, 
-		Point* Points, 
-		base_lighting& Lights, 
+		Point* Points,
 		u64 NumPoints,
 		u32 Flags, 
 		u32 Samples
@@ -144,31 +150,15 @@ namespace LightingCL
 		Buffer* colors = CreateBuffer(NumPoints * sizeof(base_color_c), Colors);
 		Buffer* points = CreateBuffer(NumPoints * sizeof(Point), Points);
 
-		u32 numRgbLights = (Flags & LP_dont_rgb) ? 0 : Lights.rgb.size();
-		u32 numSunLights = (Flags & LP_dont_sun) ? 0 : Lights.sun.size();
-		u32 numHemiLights = (Flags & LP_dont_hemi) ? 0 : Lights.hemi.size();
-
-		Buffer* rgbLights = (numRgbLights) ? CreateBuffer(numRgbLights * sizeof(R_Light), &Lights.rgb[0]) : nullptr;
-		Buffer* sunLights = (numSunLights) ? CreateBuffer(numSunLights * sizeof(R_Light), &Lights.sun[0]) : nullptr;
-		Buffer* hemiLights = (numHemiLights) ? CreateBuffer(numHemiLights * sizeof(R_Light), &Lights.hemi[0]) : nullptr;
-
 		LightingPoints(
 			colors,
 			points,
-			rgbLights,
-			sunLights,
-			hemiLights,
 			NumPoints,
-			numRgbLights,
-			numSunLights,
-			numHemiLights,
+			Flags,
 			Samples
 		);
 
 		DeleteBuffer(colors);
 		DeleteBuffer(points);
-		DeleteBuffer(rgbLights);
-		DeleteBuffer(sunLights);
-		DeleteBuffer(hemiLights);
 	}
 }

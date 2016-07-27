@@ -116,10 +116,20 @@ void xrMU_Model::calc_lighting	(xr_vector<base_color>& dest, Fmatrix& xform, CDB
 		mapVertIt	it			= g_trans.lower_bound	(key);
 		mapVertIt	it2			= it;
 
+		/// iterator not dereferencable fix
+		if (g_trans.size() && it == g_trans.end())
+			it--;
+		/// iterator not dereferencable fix end
+
 		// Decrement to the start and inc to end
-		while (it!=g_trans.begin() && ((it->first+eps2)>key)) it--;
-		while (it2!=g_trans.end() && ((it2->first-eps2)<key)) it2++;
-		if (it2!=g_trans.end())	it2++;
+		while (it != g_trans.begin() && ((it->first + eps2) > key))
+			it--;
+
+		while (it2 != g_trans.end() && ((it2->first - eps2) < key))
+			it2++;
+
+		if (it2 != g_trans.end())
+			it2++;
 
 		// Search
 		BOOL	found = FALSE;
@@ -217,7 +227,7 @@ void xrMU_Model::calc_lighting	()
 	clMsg					("model '%s' - REF_lighted.",*m_name);
 }
 
-void xrMU_Model::calc_lighting_cl(xr_vector<base_color>& dest, Fmatrix& xform, LightingCL::ILightingCLApi* Api, base_lighting& lights, u32 flags)
+void xrMU_Model::calc_lighting_cl(xr_vector<base_color>& dest, Fmatrix& xform, LightingCL::ILightingCLApi* Api, u32 flags)
 {
 #if (ERT_DUMP_DEBUG_DATA == 1)
 	//bool bDumpDebugData = !xr_strcmp(m_name, "levels\\radar_1511\\radar_1511_lod0000");
@@ -296,6 +306,11 @@ void xrMU_Model::calc_lighting_cl(xr_vector<base_color>& dest, Fmatrix& xform, L
 			mapVertIt it = g_trans.lower_bound(key);
 			mapVertIt it2 = it;
 
+			/// iterator not dereferencable fix
+			if (g_trans.size() && it == g_trans.end())
+				it--;
+			/// iterator not dereferencable fix end
+
 			// Decrement to the start and inc to end
 			while (it != g_trans.begin() && ((it->first + eps2) > key))
 				it--;
@@ -338,7 +353,6 @@ void xrMU_Model::calc_lighting_cl(xr_vector<base_color>& dest, Fmatrix& xform, L
 	Api->LightingPoints(
 		&lightingData.Colors[0],
 		&lightingData.Points[0],
-		lights,
 		numVertices,
 		flags,
 		n_samples
@@ -490,7 +504,7 @@ void xrMU_Model::calc_lighting_cl(xr_vector<base_color>& dest, Fmatrix& xform, L
 	}
 }
 
-void xrMU_Model::calc_lighting_cl()
+void xrMU_Model::calc_lighting_cl(LightingCL::ILightingCLApi* Api)
 {
 	// BB
 	Fbox bounds;
@@ -503,16 +517,14 @@ void xrMU_Model::calc_lighting_cl()
 	CDB::CollectorPacked collector(bounds, (u32)m_vertices.size(), (u32)m_faces.size());
 
 	export_cform_rcast(collector, Fidentity);
-
-	LightingCL::ILightingCLApi* api = pBuild->GetLightingCLApi();
 	
 	clMsg("...model '%s' - building collision", *m_name);
 
-	api->BuildCollisionModel(collector, pBuild->materials);
+	Api->BuildCollisionModel(collector, pBuild->materials);
 
 	clMsg("...model '%s' - lighting CL", *m_name);
 
-	calc_lighting_cl(color, Fidentity, api, pBuild->L_static, LP_dont_rgb + LP_dont_sun);
+	calc_lighting_cl(color, Fidentity, Api, LP_dont_rgb + LP_dont_sun);
 
 	clMsg("model '%s' - REF_lighted.", *m_name);
 }

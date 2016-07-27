@@ -1,7 +1,6 @@
 #pragma once
 
 #include "xrPool.h"
-#include "cl_collector.h"
 #include "LightingCL\ILightingCLApi.h"
 
 class xrMU_Model
@@ -37,48 +36,48 @@ public:
 	typedef v_subdivs::iterator		v_subdivs_it;
 
 	//** 
-	struct	_vertex	: public ::base_Vertex
+	struct	_vertex : public ::base_Vertex
 	{
 		v_faces		adjacent;
 
 	public:
-		void		prep_add			(_face* F);
-		void		prep_remove			(_face* F);
+		void		prep_add(_face* F);
+		void		prep_remove(_face* F);
 		void		calc_normal_adjacent();
 
-		_vertex()			{ };
-		virtual ~_vertex()	{ };
+		_vertex() { };
+		virtual ~_vertex() { };
 	};
 
 	//**
-	struct	_face	: public ::base_Face
+	struct	_face : public ::base_Face
 	{
 	public:
-		_vertex*	v	[3];
-		Fvector2	tc	[3];
+		_vertex*	v[3];
+		Fvector2	tc[3];
 		Fvector		N;
 	public:
-		virtual Fvector2*	getTC0				( ) { return tc; };
+		virtual Fvector2*	getTC0() { return tc; };
 
-		bool				VContains			( _vertex* pV);					// Does the face contains this vertex?
-		void				VReplace			( _vertex* what, _vertex* to);	// Replace ONE vertex by ANOTHER
-		void				VReplace_NoRemove	( _vertex* what, _vertex* to);
-		int					VIndex				( _vertex* pV);
-		void				VSet				( int idx, _vertex* V);
-		void				VSet				( _vertex *V1, _vertex *V2, _vertex *V3);
-		BOOL				isDegenerated		( );
-		BOOL				isEqual				( _face& F );
-		float				EdgeLen				( int edge);
-		void				EdgeVerts			( int e, _vertex** A, _vertex** B);
-		void				CalcNormal			( );
-		void				CalcNormal2			( );
-		float				CalcArea			( );
-		float				CalcMaxEdge			( );
-		void				CalcCenter			( Fvector &C );
-		BOOL				RenderEqualTo		( Face *F );
+		bool				VContains(_vertex* pV);					// Does the face contains this vertex?
+		void				VReplace(_vertex* what, _vertex* to);	// Replace ONE vertex by ANOTHER
+		void				VReplace_NoRemove(_vertex* what, _vertex* to);
+		int					VIndex(_vertex* pV);
+		void				VSet(int idx, _vertex* V);
+		void				VSet(_vertex *V1, _vertex *V2, _vertex *V3);
+		BOOL				isDegenerated();
+		BOOL				isEqual(_face& F);
+		float				EdgeLen(int edge);
+		void				EdgeVerts(int e, _vertex** A, _vertex** B);
+		void				CalcNormal();
+		void				CalcNormal2();
+		float				CalcArea();
+		float				CalcMaxEdge();
+		void				CalcCenter(Fvector &C);
+		BOOL				RenderEqualTo(Face *F);
 
-		_face()				{ };
-		virtual ~_face()	{ };
+		_face() { };
+		virtual ~_face() { };
 	};
 public:
 	shared_str				m_name;
@@ -89,22 +88,22 @@ public:
 
 	xr_vector<base_color>	color;
 private:
-	_face*					create_face			(_vertex* v0, _vertex* v1, _vertex* v2, b_face& F);
-	_vertex*				create_vertex		(Fvector& P);
-	_face*					load_create_face	(Fvector& P1, Fvector& P2, Fvector& P3, b_face& F);
-	_vertex*				load_create_vertex	(Fvector& P);
+	_face*					create_face(_vertex* v0, _vertex* v1, _vertex* v2, b_face& F);
+	_vertex*				create_vertex(Fvector& P);
+	_face*					load_create_face(Fvector& P1, Fvector& P2, Fvector& P3, b_face& F);
+	_vertex*				load_create_vertex(Fvector& P);
 public:
-	void					Load				(IReader& fs);
-	void					calc_normals		();
-	void					calc_materials		();
-	void					calc_faceopacity	();
-	void					calc_lighting		(xr_vector<base_color>& dest, Fmatrix& xform, CDB::MODEL* M, base_lighting& lights, u32 flags);
-	void					calc_lighting		();
-	void calc_lighting_cl();
-	void calc_lighting_cl(xr_vector<base_color>& dest, Fmatrix& xform, LightingCL::ILightingCLApi* Api, base_lighting& lights, u32 flags);
-	void					calc_ogf			();
-	void					export_geometry		();
-	void					export_cform_rcast	(CDB::CollectorPacked& CL, Fmatrix& xform);
+	void					Load(IReader& fs);
+	void					calc_normals();
+	void					calc_materials();
+	void					calc_faceopacity();
+	void					calc_lighting(xr_vector<base_color>& dest, Fmatrix& xform, CDB::MODEL* M, base_lighting& lights, u32 flags);
+	void					calc_lighting();
+	void calc_lighting_cl(LightingCL::ILightingCLApi* Api);
+	void calc_lighting_cl(xr_vector<base_color>& dest, Fmatrix& xform, LightingCL::ILightingCLApi* Api, u32 flags);
+	void					calc_ogf();
+	void					export_geometry();
+	void					export_cform_rcast(CDB::CollectorPacked& CL, Fmatrix& xform);
 };
 
 class xrMU_Reference

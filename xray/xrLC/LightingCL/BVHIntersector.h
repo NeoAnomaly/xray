@@ -17,18 +17,14 @@ namespace LightingCL
 			xr_vector<b_material>& Materials
 		);
 
+		void LoadLights(base_lighting& Lights);
 		void LoadTextures(xr_vector<b_BuildTexture>& Textures, Event** Event);
 
 		void LightingPoints(
 			Calc::Buffer* Colors,
 			Calc::Buffer* Points,
-			Calc::Buffer* RgbLights,
-			Calc::Buffer* SunLights,
-			Calc::Buffer* HemiLights,
 			u64 NumPoints,
-			u32 NumRgbLights,
-			u32 NumSunLights,
-			u32 NumHemiLights,
+			u32 Flags,
 			u32 Samples
 		);
 	private:
@@ -41,13 +37,14 @@ namespace LightingCL
 			sNone = 1 << 0,
 			sTexturesLoaded = 1 << 1,
 			sCollisionModelLoaded = 1 << 2,
+			sLightsLoaded = 1 << 3,
 
-			sReady = sTexturesLoaded | sCollisionModelLoaded
+			sReady = sTexturesLoaded | sLightsLoaded | sCollisionModelLoaded
 		};
 
 		Calc::Device* m_Device;
 		GpuData* m_GpuData;
 		BVHBuilder* m_BvhBuilder;
-		u8 m_State;
+		u32 m_State;
 	};
 }

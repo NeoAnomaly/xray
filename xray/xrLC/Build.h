@@ -11,37 +11,15 @@
 #include "fs.h"
 #include "xrLevel.h"
 #include "Etextureparams.h"
+#include "b_BuildTexture.h"
 #include "shader_xrlc.h"
 #include "xrMU_Model.h"
+
 
 #include "LightingCL\ILightingCLApi.h"
 
 #pragma comment(lib,"dxt.lib")
 extern "C" bool __declspec(dllimport) __stdcall DXTCompress(LPCSTR out_name, u8* raw_data, u8* normal_map, u32 w, u32 h, u32 pitch, STextureParams* fmt, u32 depth);
-
-struct b_BuildTexture : public b_texture
-{
-	STextureParams	THM;
-	
-	u32&	Texel	(u32 x, u32 y)
-	{
-		return pSurface[y*dwWidth+x];
-	}
-	void	Vflip		()
-	{
-		R_ASSERT(pSurface);
-		for (u32 y=0; y<dwHeight/2; y++)
-		{
-			u32 y2 = dwHeight-y-1;
-			for (u32 x=0; x<dwWidth; x++) 
-			{
-				u32		t	= Texel(x,y);
-				Texel	(x,y)	= Texel(x,y2);
-				Texel	(x,y2)	= t;
-			}
-		}
-	}
-};
 
 //////////////////////////////////////////////////////////////////////////
 // tesselator callbacks

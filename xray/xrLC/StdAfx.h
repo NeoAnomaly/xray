@@ -9,9 +9,9 @@
 #pragma once
 
 #define ERT_DISABLE_MULTI_SAMPLING 1
-#define ERT_DUMP_DEBUG_DATA 1
+#define ERT_DUMP_DEBUG_DATA 0
 #define ERT_FIRST_MU_TEST_CASE 1
-#define ERT_DISABLE_CLASSIC_METHOD 1
+#define ERT_DISABLE_CLASSIC_METHOD 0
 
 #include "../xrCore/xrCore.h"
 

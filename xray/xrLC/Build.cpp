@@ -195,6 +195,7 @@ void CBuild::RayTests(LPCSTR path)
 
 			m_LightingCLApi = LightingCL::ILightingCLApi::Create(i);
 			m_LightingCLApi->LoadTextures(textures);
+			m_LightingCLApi->LoadLights(pBuild->L_static);
 		}
 
 		
@@ -204,7 +205,7 @@ void CBuild::RayTests(LPCSTR path)
 		for (u32 m = 0; m < pBuild->mu_models.size(); m++)
 #endif
 		{
-			pBuild->mu_models[m]->calc_lighting_cl();
+			pBuild->mu_models[m]->calc_lighting_cl(m_LightingCLApi);
 
 			Progress((float)m / (float)pBuild->mu_models.size());
 		}

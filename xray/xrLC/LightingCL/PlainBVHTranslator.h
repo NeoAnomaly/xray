@@ -10,7 +10,7 @@ namespace LightingCL
 	public:
 		struct Node
 		{
-			Fbox Bounds;
+			bbox Bounds;
 			int64_t StartIdx;		/// translates to cl_long
 			int64_t NextIdx;
 		};

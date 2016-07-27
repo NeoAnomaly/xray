@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "cl_collector.h"
 #include "build.h"
 #include "communicate.h"
 

@@ -58,6 +58,9 @@
     <Filter Include="LightingCL\OpenCL">
       <UniqueIdentifier>{9c8df28c-edcf-4f4a-b1ee-15a99a959082}</UniqueIdentifier>
     </Filter>
+    <Filter Include="LightingCL\Math">
+      <UniqueIdentifier>{9e856cf5-529b-41f7-8439-6991b013a5a0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_d3d_extensions.h">
@@ -77,9 +80,6 @@
     </ClInclude>
     <ClInclude Include="cl_log.h">
       <Filter>Kernel\Log</Filter>
-    </ClInclude>
-    <ClInclude Include="cl_collector.h">
-      <Filter>CDB</Filter>
     </ClInclude>
     <ClInclude Include="cl_intersect.h">
       <Filter>CDB</Filter>
@@ -235,6 +235,21 @@
     <ClInclude Include="LightingCL\BufferImpl.h">
       <Filter>LightingCL</Filter>
     </ClInclude>
+    <ClInclude Include="LightingCL\Math\bbox.h">
+      <Filter>LightingCL\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="LightingCL\Math\float2.h">
+      <Filter>LightingCL\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="LightingCL\Math\float3.h">
+      <Filter>LightingCL\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="LightingCL\Math\int2.h">
+      <Filter>LightingCL\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="b_BuildTexture.h">
+      <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Internal</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="StdAfx.cpp">
@@ -248,9 +263,6 @@
     </ClCompile>
     <ClCompile Include="cl_log.cpp">
       <Filter>Kernel\Log</Filter>
-    </ClCompile>
-    <ClCompile Include="cl_collector.cpp">
-      <Filter>CDB</Filter>
     </ClCompile>
     <ClCompile Include="NV_Library\NvTriStrip.cpp">
       <Filter>External\NV_Strips</Filter>
@@ -482,5 +494,9 @@
     <ResourceCompile Include="resource.rc">
       <Filter>Kernel\Res</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="LightingCL\Kernels\bvh.cl" />
+    <None Include="LightingCL\Kernels\common.cl" />
   </ItemGroup>
 </Project>

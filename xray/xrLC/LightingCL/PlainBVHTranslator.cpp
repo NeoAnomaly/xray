@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include "Math\bbox.h"
+
 #include "BVHBuilder.h"
 
 #include "PlainBVHTranslator.h"
@@ -63,7 +65,15 @@ namespace LightingCL
 		size_t idx = m_NodeCount;
 
 		PlainBVHTranslator::Node& node = m_Nodes[m_NodeCount];
-		node.Bounds = Node->Bounds;
+		
+		node.Bounds.pmin.x = Node->Bounds.min.x;
+		node.Bounds.pmin.y = Node->Bounds.min.y;
+		node.Bounds.pmin.z = Node->Bounds.min.z;
+
+		node.Bounds.pmax.x = Node->Bounds.max.x;
+		node.Bounds.pmax.y = Node->Bounds.max.y;
+		node.Bounds.pmax.z = Node->Bounds.max.z;
+
 		int64_t& startIdx = m_StartIdx[m_NodeCount++];
 
 		if (Node->Type == BVHBuilder::Leaf)

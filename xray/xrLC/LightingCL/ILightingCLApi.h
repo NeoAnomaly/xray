@@ -9,7 +9,7 @@
 //}
 //
 //struct b_material;
-struct b_BuildTexture;
+//struct b_BuildTexture;
 //class base_color;
 //class base_lighting;
 
@@ -79,9 +79,10 @@ namespace LightingCL
 		static void Delete(ILightingCLApi* Api);
 
 		///
-		/// Collision model management
+		/// Scene management
 		///
-		virtual void LoadTextures(xr_vector<struct b_BuildTexture>& Textures) = 0;
+		virtual void LoadTextures(xr_vector<b_BuildTexture>& Textures) = 0;
+		virtual void LoadLights(base_lighting& Lights) = 0;
 
 		virtual void BuildCollisionModel(
 			CDB::CollectorPacked& Collector, 
@@ -112,23 +113,22 @@ namespace LightingCL
 		///
 		/// Lighting
 		///
-		virtual void LightingPoints(
-			Buffer* Colors, 
-			Buffer* Points, 
-			Buffer* RgbLights,
-			Buffer* SunLights,
-			Buffer* HemiLights,
-			u64 NumPoints,
-			u32 NumRgbLights,
-			u32 NumSunLights,
-			u32 NumHemiLights,
-			u32 Samples
-		) = 0;
+		//virtual void LightingPoints(
+		//	Buffer* Colors, 
+		//	Buffer* Points, 
+		//	Buffer* RgbLights,
+		//	Buffer* SunLights,
+		//	Buffer* HemiLights,
+		//	u64 NumPoints,
+		//	u32 NumRgbLights,
+		//	u32 NumSunLights,
+		//	u32 NumHemiLights,
+		//	u32 Samples
+		//) = 0;
 
 		virtual void LightingPoints(
 			base_color_c* Colors, 
-			Point* Points, 
-			base_lighting& Lights, 
+			Point* Points,
 			u64 NumPoints,
 			u32 Flags, 
 			u32 Samples = 1
