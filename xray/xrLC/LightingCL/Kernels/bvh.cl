@@ -63,14 +63,14 @@ typedef struct _Color
 } Color;
 
 typedef struct _Light
-{
-	uchar Type;				// Type of light source		
+{		
 	float3 Diffuse;			// Diffuse color of light	
 	float3 Position;		// Position in world space	
 	float3 Direction;		// Direction in world space	
-	float2 Range;			// (Cutoff range; Cutoff range ^ 2)
 	float3 Attenuation;		// (Constant attenuation; Linear attenuation; Quadratic attenuation)
+	float Range;			// Cutoff range
 	float Energy;			// For radiosity ONLY
+	uchar Type;				// Type of light source
 } Light;
 
 typedef struct _Texture
@@ -379,7 +379,7 @@ Color* Color
 			{
 				// Distance
 				float distance = fast_distance(Point->Position, light.Position);
-				if (distance > light.Range.x) 
+				if (distance > light.Range) 
 					continue;
 
 				// Dir
@@ -395,7 +395,7 @@ Color* Color
 				float a;
 				
 				// if (gl_linear)	
-				// 	a = 1 - distance / light.Range.x;
+				// 	a = 1 - distance / light.Range;
 				// else			
 					a = 
 					scale 
@@ -415,7 +415,7 @@ Color* Color
 			// {
 			// 	// Distance
 			// 	float distance = fast_distance(Point->Position, light.Position);
-			// 	if (distance > light.Range.x) 
+			// 	if (distance > light.Range) 
 			// 		continue;
 
 			// 	// Dir
@@ -465,7 +465,7 @@ Color* Color
 			{
 				// Distance
 				float distance = fast_distance(Point->Position, light.Position);
-				if (distance > light.Range.x) 
+				if (distance > light.Range) 
 					continue;
 
 				// Dir
@@ -515,7 +515,7 @@ Color* Color
 			{
 				// Distance
 				float distance = fast_distance(Point->Position, light.Position);
-				if (distance > light.Range.x) 
+				if (distance > light.Range) 
 					continue;
 
 				// Dir

@@ -21,15 +21,17 @@ static int const kWorkGroupSize = 64;
 namespace LightingCL
 {
 	struct LightCL
-	{
-		u8 Type;				// Type of light source		
+	{			
 		float3 Diffuse;			// Diffuse color of light	
 		float3 Position;		// Position in world space	
 		float3 Direction;		// Direction in world space	
-		float2 Range;			// (Cutoff range; Cutoff range ^ 2)
 		float3 Attenuation;		// (Constant attenuation; Linear attenuation; Quadratic attenuation)
+		float Range;			// Cutoff range
 		float Energy;			// For radiosity ONLY
+		u8 Type;				// Type of light source	
 	};
+
+	//const size_t size = sizeof(LightCL);	// 76
 
 	struct BVHIntersector::GpuData
 	{
@@ -244,8 +246,7 @@ namespace LightingCL
 			Store[Counter].Direction.y = xrLigth.direction.y;
 			Store[Counter].Direction.z = xrLigth.direction.z;
 
-			Store[Counter].Range.x = xrLigth.range;
-			Store[Counter].Range.y = xrLigth.range2;
+			Store[Counter].Range = xrLigth.range;
 
 			Store[Counter].Attenuation.x = xrLigth.attenuation0;
 			Store[Counter].Attenuation.y = xrLigth.attenuation1;
