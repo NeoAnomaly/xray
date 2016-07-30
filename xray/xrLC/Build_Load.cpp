@@ -206,16 +206,26 @@ void CBuild::Load(const b_params& Params, const IReader& _in_FS)
 				Flight	L = temp.data;
 
 				// type
-				if (L.type == D3DLIGHT_DIRECTIONAL)	RL.type = LT_DIRECT;
+				if (L.type == D3DLIGHT_DIRECTIONAL)	
+					RL.type = LT_DIRECT;
 				else
 					RL.type = LT_POINT;
+
 				RL.level = 0;
 
 				// split energy/color
 				float			_e = (L.diffuse.r + L.diffuse.g + L.diffuse.b) / 3.f;
 				Fvector			_c = { L.diffuse.r,L.diffuse.g,L.diffuse.b };
-				if (_abs(_e) > EPS_S)		_c.div(_e);
-				else { _c.set(0, 0, 0); _e = 0; }
+
+				if (_abs(_e) > EPS_S)
+				{
+					_c.div(_e);
+				}
+				else 
+				{
+					_c.set(0, 0, 0);
+					_e = 0;
+				}
 
 				// generic properties
 				RL.diffuse.set(_c);
@@ -304,7 +314,7 @@ void CBuild::Load(const b_params& Params, const IReader& _in_FS)
 
 			strlwr(N);
 
-			if (0 == xr_strcmp(N, "level_lods")) 
+			if (0 == xr_strcmp(N, "level_lods"))
 			{
 				// HACK for merged lod textures
 				BT.dwWidth = 1024;
@@ -312,7 +322,7 @@ void CBuild::Load(const b_params& Params, const IReader& _in_FS)
 				BT.bHasAlpha = TRUE;
 				BT.pSurface = 0;
 			}
-			else 
+			else
 			{
 				string_path			th_name;
 #ifdef PRIQUEL
@@ -320,7 +330,7 @@ void CBuild::Load(const b_params& Params, const IReader& _in_FS)
 #else // PRIQUEL
 				FS.update_path(th_name, "$textures$", strconcat(sizeof(th_name), th_name, N, ".thm"));
 #endif // PRIQUEL
-				
+
 				IReader* THM = FS.r_open(th_name);
 
 				// KD: first part of textures fix - start
@@ -371,7 +381,7 @@ void CBuild::Load(const b_params& Params, const IReader& _in_FS)
 						u32			w = 0, h = 0;
 
 						BT.pSurface = Surface_Load(N, w, h);
-						
+
 						if (!BT.pSurface)
 						{
 							clMsg("--	cannot load surface");
@@ -408,15 +418,18 @@ void CBuild::Load(const b_params& Params, const IReader& _in_FS)
 	{
 		b_material &M = materials[m];
 
-		if (65535 == M.shader_xrlc) {
+		if (65535 == M.shader_xrlc) 
+		{
 			// No compiler shader
 			M.reserved = u16(-1);
 			// clMsg	(" *  %20s",shader_render[M.shader].name);
 		}
-		else {
+		else 
+		{
 			// clMsg	(" *  %20s / %-20s",shader_render[M.shader].name, shader_compile[M.shader_xrlc].name);
 			int id = shaders.GetID(shader_compile[M.shader_xrlc].name);
-			if (id < 0) {
+			if (id < 0) 
+			{
 				clMsg("ERROR: Shader '%s' not found in library", shader_compile[M.shader].name);
 				R_ASSERT(id >= 0);
 			}

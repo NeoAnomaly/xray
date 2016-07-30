@@ -22,6 +22,20 @@ namespace LightingCL
 		virtual void BuildCollisionModel(CDB::CollectorPacked & Collector, xr_vector<b_material>& Materials) override;
 		virtual Buffer * CreateBuffer(size_t Size, void * InitData) const override;
 		virtual void DeleteBuffer(Buffer * Buffer) const override;
+		virtual void ReadBuffer(
+			const Buffer* Buffer,
+			size_t Offset,
+			size_t Size,
+			void* Destination,
+			Event** Event
+		) const override;
+		template <typename T> void ReadTypedBuffer(
+			const Buffer* Buffer,
+			size_t Offset,
+			size_t Count,
+			T* Destination,
+			Event** Event
+		) const;
 		virtual void MapBuffer(Buffer * Buffer, MapType Type, size_t Offset, size_t Size, void ** Data, Event ** Event) const override;
 		virtual void UnmapBuffer(Buffer * Buffer, void * Data, Event ** Event) const override;
 		virtual void DeleteEvent(Event * Event) const override;

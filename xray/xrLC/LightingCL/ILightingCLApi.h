@@ -57,8 +57,13 @@ namespace LightingCL
 		MapWrite = 0x2
 	};
 
-	struct Point
+#if (_MSC_VER < 1900)
+	_declspec(align(16)) struct Point
+#else
+	struct alignas(16) Point
+#endif
 	{
+		/// Fvector mapped to opencl as float3(sizeof 16) thus it must be aligned on 16 bytes boundary
 		Fvector Position;
 		Fvector Normal;
 	};
@@ -94,6 +99,14 @@ namespace LightingCL
 		///
 		virtual Buffer* CreateBuffer(size_t Size, void* InitData) const = 0;
 		virtual void DeleteBuffer(Buffer* Buffer) const = 0;
+
+		virtual void ReadBuffer(
+			const Buffer* Buffer,
+			size_t Offset, 
+			size_t Size, 
+			void* Destination, 
+			Event** Event
+		) const = 0;
 		
 		virtual void MapBuffer(
 			Buffer* Buffer, 

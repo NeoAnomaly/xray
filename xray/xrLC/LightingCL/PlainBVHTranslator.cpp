@@ -74,7 +74,9 @@ namespace LightingCL
 		node.Bounds.pmax.y = Node->Bounds.max.y;
 		node.Bounds.pmax.z = Node->Bounds.max.z;
 
-		int64_t& startIdx = m_StartIdx[m_NodeCount++];
+		int64_t& startIdx = m_StartIdx[m_NodeCount];
+
+		m_NodeCount++;
 
 		if (Node->Type == BVHBuilder::Leaf)
 		{

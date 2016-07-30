@@ -107,6 +107,38 @@ namespace LightingCL
 		m_Device->DeleteBuffer(static_cast<BufferImpl*>(Buffer)->GetData());
 	}
 
+	void LightingCLApi::ReadBuffer(
+		const Buffer* Buffer,
+		size_t Offset,
+		size_t Size,
+		void* Destination,
+		Event** Event
+	) const
+	{
+		m_Device->ReadBuffer(
+			static_cast<const BufferImpl*>(Buffer)->GetData(),
+			0,
+			Offset,
+			Size,
+			Destination,
+			nullptr
+		);
+
+		m_Device->Finish(0);
+	}
+
+	template <typename T> 
+	void LightingCLApi::ReadTypedBuffer(
+		const Buffer* Buffer,
+		size_t Offset,
+		size_t Count,
+		T* Destination,
+		Event** Event
+	) const
+	{
+		ReadBuffer(Buffer, Offset * sizeof(T), Count * sizeof(T), Destination, Event);
+	}
+
 	void LightingCLApi::MapBuffer(Buffer * Buffer, MapType Type, size_t Offset, size_t Size, void ** Data, Event ** Event) const
 	{
 		R_ASSERT(!"Not implemented");
@@ -147,7 +179,23 @@ namespace LightingCL
 		u32 Samples
 	)
 	{
-		Buffer* colors = CreateBuffer(NumPoints * sizeof(base_color_c), Colors);
+		struct Color
+		{
+			float R;		// - all static lighting
+			float G;
+			float B;
+
+			float Hemi;		// - hemisphere
+			float Sun;		// - sun
+
+			float Nop;		// base_color_c::_tmp_
+
+			u64 Padding;
+		};
+
+		const size_t size = sizeof(Color);
+
+		Buffer* colors = CreateBuffer(NumPoints * sizeof(Color), Colors);
 		Buffer* points = CreateBuffer(NumPoints * sizeof(Point), Points);
 
 		LightingPoints(
@@ -157,6 +205,9 @@ namespace LightingCL
 			Flags,
 			Samples
 		);
+
+		/// reading the result
+		ReadTypedBuffer(colors, 0, NumPoints, Colors, nullptr);
 
 		DeleteBuffer(colors);
 		DeleteBuffer(points);

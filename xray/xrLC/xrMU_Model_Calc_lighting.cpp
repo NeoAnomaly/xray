@@ -258,10 +258,8 @@ void xrMU_Model::calc_lighting_cl(xr_vector<base_color>& dest, Fmatrix& xform, L
 	///
 	/// Prepare for lighting
 	///
-
 	struct
 	{
-
 		xr_vector<LightingCL::Point> Points;
 		xr_vector<base_color_c> Colors;
 

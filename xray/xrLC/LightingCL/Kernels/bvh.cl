@@ -37,16 +37,19 @@ typedef struct _BvhNode
 {
 	bbox Bounds;
 	long StartIdx;
-	long NetxtIdx;
+	long NextIdx;
 } BvhNode;
 
 typedef struct _Face
 {
-	uint Idx[3];
-	uint TextureId;	
-	float2 UV[3];
-	bool CastShadow;
-	bool Opaque;
+	uint Idx[3];		// +0: 12 bytes
+	ushort TextureId;	// +12: 2 bytes
+	uchar CastShadow;	// +14
+	uchar Opaque;		// +15
+	float2 UV[3];		// +16: 24 bytes
+	
+
+	//float2 Padding;	// +40: 8 bytes
 } Face;
 
 typedef struct _Point
@@ -57,9 +60,16 @@ typedef struct _Point
 
 typedef struct _Color
 {
-	float3 Rgb;		// - all static lighting
+	float R;		// - all static lighting
+	float G;
+	float B;
+
 	float Hemi;		// - hemisphere
 	float Sun;		// - sun
+
+	float Nop;		// base_color_c::_tmp_
+
+	float2 Padding;
 } Color;
 
 typedef struct _Light
@@ -70,7 +80,9 @@ typedef struct _Light
 	float3 Attenuation;		// (Constant attenuation; Linear attenuation; Quadratic attenuation)
 	float Range;			// Cutoff range
 	float Energy;			// For radiosity ONLY
-	uchar Type;				// Type of light source
+	ushort Type;			// Type of light source
+
+	char Padding[6];
 } Light;
 
 typedef struct _Texture
@@ -98,18 +110,12 @@ typedef struct
 	uint NumHemiLights;
 } SceneData;
 
-typedef struct _Ray
+typedef struct _RayInternal
 {
 	float3 Origin;
 	float3 Direction;
     float Range;
-} Ray;
-
-typedef struct _Intersection
-{
-	float4 uvwt;
-	long FaceId;
-} Intersection;
+} RayInternal;
 
 /*************************************************************************
 HELPER FUNCTIONS
@@ -166,7 +172,7 @@ int IntersectBox(float3 RayOrigin, float3 InvDir, bbox Box, float MaxRange)
 }
 
 // Intersect Ray against triangle
-bool IntersectTriangle(const Ray* Ray, float3 V1, float3 V2, float3 V3, float2* UV)
+bool IntersectTriangle(const RayInternal* Ray, float3 V1, float3 V2, float3 V3, float2* UV)
 {
     const float3 e1 = V2 - V1;
     const float3 e2 = V3 - V1;
@@ -250,15 +256,15 @@ BVH FUNCTIONS
 float GetFaceOpacity(
     const SceneData* Scene,
     const BvhNode* Node,
-    const Ray* Ray                // ray to instersect
+    const RayInternal* Ray                // ray to instersect
     )
 {
 	float opacity = 1.f;
 	float2 isectUV;
 	float3 v1, v2, v3;
-	Face face;
+	
 	long start = STARTIDX(Node);
-	face = Scene->Faces[start];
+	Face face = Scene->Faces[start];
 	v1 = Scene->Vertices[face.Idx[0]];
 	v2 = Scene->Vertices[face.Idx[1]];
 	v3 = Scene->Vertices[face.Idx[2]];
@@ -294,10 +300,11 @@ float RayTrace(
     float Range
     )
 {
+	uint loopBreaker = 0;
 	float scale = 1.f;
 	const float3 invDir = make_float3(1.f, 1.f, 1.f) / Direction.xyz;	
 	long idx = 0;
-	Ray ray =
+	RayInternal ray =
 	{
 		StartPoint,
 		Direction,
@@ -314,14 +321,15 @@ float RayTrace(
 		{
 			if (LEAFNODE(node))
 			{
+				/*
 				/// perform intersection check and then calculate opacity value of the intersected face
-				scale *= GetFaceOpacity(Scene, &node, &ray);
+				scale *= 0.5f;//GetFaceOpacity(Scene, &node, &ray);
 
 				/// so, scale was too small, stop tracing
 				if (scale < FLT_EPSILON)
 					return scale;
-
-				idx = node.NetxtIdx;
+*/
+				idx = node.NextIdx;
 			}
 			// Traverse child nodes otherwise.
 			else
@@ -331,11 +339,78 @@ float RayTrace(
 		}
 		else
 		{
-			idx = node.NetxtIdx;
+			idx = node.NextIdx;
+		}
+
+		if (++loopBreaker > 100)
+		{
+			scale = 0.f;
+			break;
 		}
 	}
 
 	return scale;
+}
+
+void LightPointForHemi(
+// Input
+const Point* Point,
+const SceneData* Scene,
+uint LightOffset,
+// output
+Color* Color
+)
+{
+	float3 dirToLight;
+    float3 startPoint = mad(Point->Normal, 0.01f, Point->Position);
+
+	for (uint i = LightOffset; i < Scene->NumHemiLights; i++)
+	{
+		/// fetch light
+		Light light = Scene->Lights[i];
+
+		if (light.Type == LT_DIRECT) 
+		{
+			// Cos
+			dirToLight = invert_float3(light.Direction);
+			float D = dot(dirToLight, Point->Normal);
+			if (D <= 0) 
+				continue;
+
+			// Trace Light
+			float3 transformedPoint = mad(dirToLight, 0.001f, startPoint); 
+			float scale = light.Energy * RayTrace(Scene, transformedPoint, dirToLight, 1000.f);
+			Color->Hemi += scale;
+		}
+		else 
+		{
+			// Distance
+			float distance = fast_distance(Point->Position, light.Position);
+			if (distance > light.Range) 
+				continue;
+
+			// Dir
+			dirToLight = light.Position - Point->Position;
+			dirToLight = normalize(dirToLight);
+			
+			float D = dot(dirToLight, Point->Normal);
+			if (D <= 0)			
+				continue;
+
+			// Trace Light
+			float scale = D * light.Energy * RayTrace(Scene, startPoint, dirToLight, distance);
+			float a = 
+				scale 
+				/ 
+				(
+					light.Attenuation.x + 
+					light.Attenuation.y * distance + 
+					light.Attenuation.z * (distance * distance)
+				);
+
+			Color->Hemi += a;
+		}
+	}
 }
 
 void LightPoint(
@@ -350,7 +425,8 @@ Color* Color
     float3 dirToLight;
     float3 startPoint = mad(Point->Normal, 0.01f, Point->Position);
 	
-	if (((Flags & LP_dont_rgb) == 0) && Scene->NumRgbLights)
+	bool needProcessing = ((Flags & LP_dont_rgb) == 0) && Scene->NumRgbLights;
+	if (needProcessing)
 	{
 		for (uint i = 0; i < Scene->NumRgbLights; ++i)
 		{
@@ -370,9 +446,9 @@ Color* Color
 				// Trace LightCL
 				float scale = D * light.Energy * RayTrace(Scene, startPoint, dirToLight, 1000.f);
 
-				Color->Rgb.x += scale * light.Diffuse.x;
-				Color->Rgb.y += scale * light.Diffuse.y;
-				Color->Rgb.z += scale * light.Diffuse.z;
+				Color->R += scale * light.Diffuse.x;
+				Color->G += scale * light.Diffuse.y;
+				Color->B += scale * light.Diffuse.z;
 			}
 			break;
 			case LT_POINT:
@@ -406,9 +482,9 @@ Color* Color
 						light.Attenuation.z * (distance * distance)
 					);
 
-				Color->Rgb.x += a * light.Diffuse.x;
-				Color->Rgb.y += a * light.Diffuse.y;
-				Color->Rgb.z += a * light.Diffuse.z;
+				Color->R += a * light.Diffuse.x;
+				Color->G += a * light.Diffuse.y;
+				Color->B += a * light.Diffuse.z;
 			}
 			break;
 			// case LT_SECONDARY:
@@ -434,15 +510,17 @@ Color* Color
 			// 	float A = scale * (1 - R / L->range);
 			// 	L->position = Psave;
 
-			// 	C.rgb.x += A * L->diffuse.x;
-			// 	C.rgb.y += A * L->diffuse.y;
-			// 	C.rgb.z += A * L->diffuse.z;
+			// 	Color->R += A * L->diffuse.x;
+			// 	Color->G += A * L->diffuse.y;
+			// 	Color->B += A * L->diffuse.z;
 			// }
 			// break;
 			}
 		}
 	}
-	if (((Flags & LP_dont_sun) == 0) && Scene->NumSunLights)
+
+	needProcessing = ((Flags & LP_dont_sun) == 0) && Scene->NumSunLights;
+	if (needProcessing)
 	{
 		for (uint i = Scene->NumRgbLights; i < Scene->NumSunLights; ++i)
 		{
@@ -491,62 +569,18 @@ Color* Color
 			}
 		}
 	}
-	if (((Flags & LP_dont_hemi) == 0) && Scene->NumHemiLights)
+
+	needProcessing = ((Flags & LP_dont_hemi) == 0) && Scene->NumHemiLights;
+	if (needProcessing)
 	{
-		for (uint i = Scene->NumRgbLights + Scene->NumSunLights; i < Scene->NumHemiLights; ++i)
-		{
-            /// fetch light
-            Light light = Scene->Lights[i];
-
-			if (light.Type == LT_DIRECT) 
-			{
-				// Cos
-				dirToLight = invert_float3(light.Direction);
-				float D = dot(dirToLight, Point->Normal);
-				if (D <= 0) 
-                    continue;
-
-				// Trace Light
-				float3 transformedPoint = mad(dirToLight, 0.001f, startPoint); 
-				float scale = light.Energy * RayTrace(Scene, transformedPoint, dirToLight, 1000.f);
-				Color->Hemi += scale;
-			}
-			else 
-			{
-				// Distance
-				float distance = fast_distance(Point->Position, light.Position);
-				if (distance > light.Range) 
-					continue;
-
-				// Dir
-				dirToLight = light.Position - Point->Position;
-				dirToLight = normalize(dirToLight);
-				
-				float D = dot(dirToLight, Point->Normal);
-				if (D <= 0)			
-					continue;
-
-				// Trace Light
-				float scale = D * light.Energy * RayTrace(Scene, startPoint, dirToLight, distance);
-				float a = 
-					scale 
-					/ 
-					(
-						light.Attenuation.x + 
-						light.Attenuation.y * distance + 
-						light.Attenuation.z * (distance * distance)
-					);
-
-				Color->Hemi += a;
-			}
-		}
+		LightPointForHemi(Point, Scene, Scene->NumRgbLights + Scene->NumSunLights, Color);
 	}
 }
 
 //func->SetArg(arg++, m_GpuData->BvhNodes);
 //func->SetArg(arg++, m_GpuData->Vertices);
 //func->SetArg(arg++, m_GpuData->Faces);
-//func->SetArg(arg++, m_GpuData->TextureOffsets);
+//func->SetArg(arg++, m_GpuData->Textures);
 //func->SetArg(arg++, m_GpuData->TexturesData);
 //func->SetArg(arg++, Colors);
 //func->SetArg(arg++, Points);
@@ -581,17 +615,17 @@ __global Color* Colors
 {
     int global_id = get_global_id(0);
 
-    // Fill scene data 
-    SceneData scenedata =
-    {
-        Nodes,
-        Vertices,
-        Faces
-    };
-
     // Handle only working subset
     if (global_id < NumPoints)
     {
+		// Fill scene data 
+		SceneData scenedata =
+		{
+			Nodes,
+			Vertices,
+			Faces
+		};
+
 		for (uint sample = 0; sample < Samples; sample++)
 		{
 			/// fetch and transform point
@@ -629,35 +663,80 @@ __global Color* Colors
 {
     int global_id = get_global_id(0);
 
-    // Fill scene data 
-    SceneData scenedata =
-    {
-        Nodes,
-        Vertices,
-        Faces,
-		Textures,
-		TextureData,
-		Lights,
-		NumRgbLights,
-		NumSunLights,
-		NumHemiLights
-    };
+	// if (global_id == 0)
+	// {
+	// 	printf("Global id hello: %d of %d\n", global_id, get_global_id(0));
+	// }
 
-    // Handle only working subset
+    /// Handle only working subset
     if (global_id < NumPoints)
     {
+		/// Fill scene data 
+		SceneData scenedata =
+		{
+			Nodes,
+			Vertices,
+			Faces,
+			Textures,
+			TextureData,
+			Lights,
+			NumRgbLights,
+			NumSunLights,
+			NumHemiLights
+		};
+
         /// fetch point data
         Point point = Points[global_id];
         Color color = Colors[global_id];
+
+		size_t size = sizeof(BvhNode);
+		size_t size2 = sizeof(Color);
         
         LightPoint(
-            &point,
-            &scenedata,
-			Flags, 
-            &color
+				&point,
+				&scenedata,
+				Flags, 
+				&color
             );
 
-        // write data back
+        /// write data back
         Colors[global_id] = color;
     }
+}
+
+__attribute__((reqd_work_group_size(64, 1, 1)))
+__kernel void DataTest(
+// Input
+//__global const BvhNode* Nodes,	
+//__global const float3* Vertices,
+//__global const Face* Faces,		
+__global const Texture* Textures,
+__global const char* TextureData,	/// entry size = sizeof(Texture) 
+//__global const Point* Points,	
+__global const Light* Lights,
+//__global const Color* Colors,
+ulong NumEntries
+)
+{
+	int global_id = get_global_id(0);
+
+	if (global_id < NumEntries)
+	{
+		// BvhNode node = Nodes[global_id];
+		// float3 vertice = Vertices[global_id];
+		// Face face = Faces[global_id];
+		Texture texture = Textures[global_id];
+		Light light = Lights[global_id];
+		// Point point = Points[global_id];
+        // Color color = Colors[global_id];
+
+		size_t size = sizeof(Face);
+		size_t size2 = sizeof(Color);
+
+		__global const char* textureData = TextureData + texture.DataOffset;
+		//__global const Texture* textureDataTex = textureData;
+		Texture textureFromData = ((__global const Texture*)(textureData))[0];
+
+		mem_fence(CLK_GLOBAL_MEM_FENCE);
+	}
 }

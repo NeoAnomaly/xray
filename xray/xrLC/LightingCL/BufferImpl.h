@@ -12,7 +12,7 @@ namespace LightingCL
 		BufferImpl(Calc::Buffer* Buffer) : m_Buffer(Buffer) {};
 		~BufferImpl() = default;
 
-		Calc::Buffer* GetData() { return m_Buffer; }
+		Calc::Buffer* GetData() const { return m_Buffer; }
 	private:
 		Calc::Buffer* m_Buffer;
 	};

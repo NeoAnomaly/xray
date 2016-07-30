@@ -42,6 +42,8 @@ namespace LightingCL
 			sReady = sTexturesLoaded | sLightsLoaded | sCollisionModelLoaded
 		};
 
+		void DebugDataTest();
+
 		Calc::Device* m_Device;
 		GpuData* m_GpuData;
 		BVHBuilder* m_BvhBuilder;
